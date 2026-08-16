@@ -1,0 +1,20 @@
+{
+  "name": "بيّضها | المنصة الرقمية للنظافة الحضرية - بلدية البيض",
+  "short_name": "بيّضها",
+  "description": "منصة تطوعية لرصد النقاط السوداء وتأطير حملات النظافة والتشجير بالتعاون مع لجان الأحياء والمساجد والسلطات المحلية لبلدية البيض.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#12241e",
+  "theme_color": "#12241e",
+  "orientation": "portrait-primary",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "assets/img/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
