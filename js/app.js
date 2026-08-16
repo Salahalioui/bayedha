@@ -839,12 +839,12 @@ class BayedhaApp {
           },
           (err) => {
             console.warn(err);
-            document.getElementById('reportLat').value = '32.6990';
-            document.getElementById('reportLng').value = '1.0125';
+            document.getElementById('reportLat').value = '33.6835';
+            document.getElementById('reportLng').value = '1.0163';
             const statusLabel = document.getElementById('locStatusLabel');
-            if (statusLabel) statusLabel.textContent = 'وسط مدينة البيض (32.6990, 1.0125)';
+            if (statusLabel) statusLabel.textContent = 'وسط مدينة البيض (33.6835, 1.0163)';
             this.showToast('تم تحديد مركز بلدية البيض تلقائياً.');
-            this.checkProximity(32.6990, 1.0125);
+            this.checkProximity(33.6835, 1.0163);
           }
         );
       });
@@ -859,8 +859,8 @@ class BayedhaApp {
         const neighbourhood = document.getElementById('reportNeighbourhood').value.trim();
         const volume = document.getElementById('reportVolume').value || 'light';
         const access = document.getElementById('reportAccess').value || 'paved';
-        const lat = parseFloat(document.getElementById('reportLat').value) || 32.6990;
-        const lng = parseFloat(document.getElementById('reportLng').value) || 1.0125;
+        const lat = parseFloat(document.getElementById('reportLat').value) || 33.6835;
+        const lng = parseFloat(document.getElementById('reportLng').value) || 1.0163;
         const notes = document.getElementById('reportNotes').value.trim();
 
         const selectedMaterials = [];
@@ -1068,8 +1068,8 @@ class BayedhaApp {
         const meetingPoint = document.getElementById('campInputMeeting').value.trim();
         const organizer = document.getElementById('campInputOrg').value.trim();
         const tools = document.getElementById('campInputTools').value.trim();
-        const lat = newCampForm.dataset.lat || (32.6990 + (Math.random() - 0.5) * 0.015);
-        const lng = newCampForm.dataset.lng || (1.0125 + (Math.random() - 0.5) * 0.015);
+        const lat = newCampForm.dataset.lat || (33.6835 + (Math.random() - 0.5) * 0.015);
+        const lng = newCampForm.dataset.lng || (1.0163 + (Math.random() - 0.5) * 0.015);
 
         if (!title || !date || !meetingPoint) {
           alert('يرجى استيفاء كافة بيانات المبادرة.');
