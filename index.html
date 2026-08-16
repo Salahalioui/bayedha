@@ -5,15 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#12241e">
   <title>بيّضها | Bayedha - المنصة الرقمية للعمل التطوعي والنظافة الحضرية - بلدية البيض</title>
-  <meta name="description" content="منصة تطوعية لرصد النقاط السوداء وتأطير حملات النظافة والتشجير في مدينة البيض بالتعاون مع المجتمع المحلي والسلطات.">
+  <meta name="description" content="منصة تطوعية لرصد النقاط السوداء وتأطير حملات النظافة والتشجير في مدينة البيض بالتعاون مع المجتمع المحلي والمساجد والسلطات.">
   
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/img/logo.jpg">
+
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="css/main.css">
   
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%22100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
+  <link rel="icon" href="assets/img/logo.jpg">
 </head>
 <body>
 
@@ -21,9 +25,7 @@
   <header class="app-header">
     <div class="header-container">
       <div class="brand-wrapper">
-        <div class="brand-logo-mark" aria-label="شعار بيّضها">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M12 10a6 6 0 0 0-6-6H3v3a6 6 0 0 0 6 6h3"/><path d="M12 14a6 6 0 0 1 6-6h3v3a6 6 0 0 1-6 6h-3"/><path d="M12 2v20"/></svg>
-        </div>
+        <img src="assets/img/logo.jpg" alt="شعار بيّضها" class="brand-logo-img" width="42" height="42">
         <div class="brand-info">
           <h1 data-i18n="appName">بيّضها</h1>
           <p data-i18n="appTagline">المنصة الرقمية للعمل التطوعي والارتقاء بالبيئة الحضرية - بلدية البيض</p>
@@ -34,19 +36,23 @@
       <nav class="desktop-nav" aria-label="القائمة الرئيسية">
         <button class="nav-link active" data-tab="map">
           <svg class="icon" viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
-          <span data-i18n="navMap">الخارطة التفاعلية والرصد</span>
+          <span data-i18n="navMap">الخارطة التفاعلية</span>
         </button>
         <button class="nav-link" data-tab="campaigns">
           <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <span data-i18n="navCampaigns">المبادرات التطوعية</span>
+          <span data-i18n="navCampaigns">المبادرات</span>
+        </button>
+        <button class="nav-link" data-tab="ihsan">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span data-i18n="navIhsan">ميثاق الإحسان والمساجد</span>
         </button>
         <button class="nav-link" data-tab="impact">
           <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-          <span data-i18n="navImpact">سجل الإنجازات البيئية</span>
+          <span data-i18n="navImpact">سجل الإنجازات</span>
         </button>
         <button class="nav-link" data-tab="partners">
           <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 10h6"/><path d="M9 14h6"/><path d="M9 18h6"/></svg>
-          <span data-i18n="navPartners">التنسيق المؤسساتي والوقاية</span>
+          <span data-i18n="navPartners">الوقاية والمؤسسات</span>
         </button>
       </nav>
 
@@ -186,7 +192,163 @@
       </div>
     </section>
 
-    <!-- TAB 3: Before & After Wall of Impact -->
+    <!-- TAB 3: Islamic Civic Charter & Mosque Alliance (ميثاق الإحسان والمساجد) -->
+    <section id="tab-ihsan" class="tab-pane">
+      
+      <!-- Hero Banner with Generated Illustration -->
+      <div class="ihsan-hero-card">
+        <div class="ihsan-hero-img-wrapper">
+          <img src="assets/img/mosque_touiza.jpg" alt="تويزة المساجد والأحياء بمدينة البيض" class="ihsan-hero-img">
+        </div>
+        <div class="ihsan-hero-content">
+          <h2 data-i18n="ihsanHeaderTitle">ميثاق الإحسان الحضري وتويزة المساجد ولجان الأحياء</h2>
+          <p data-i18n="ihsanHeaderSubtitle">تأصيل العمل البيئي كقيمة إيمانية وسنة نبوية راسخة تعزز التضامن الجواري في مدينة البيض</p>
+        </div>
+      </div>
+
+      <!-- Hadith Principles Grid -->
+      <div style="margin-top: 24px;">
+        <h3 class="section-title" data-i18n="hadithSectionTitle">الأصول الشرعية والسنن النبوية في طهارة المحيط والغرس</h3>
+        <div class="hadith-grid">
+          
+          <div class="hadith-card">
+            <div class="hadith-icon-box">🌿</div>
+            <h4 data-i18n="hadith1Title">إماطة الأذى شعبة من شعب الإيمان</h4>
+            <blockquote data-i18n="hadith1Text">قال رسول الله ﷺ: «الإيمانُ بضعٌ وسبعونَ شُعبةً، فأفضلُها قولُ لا إله إلا الله، وأدناها إماطةُ الأذى عن الطريق».</blockquote>
+            <span class="hadith-source" data-i18n="hadith1Source">صحيح مسلم</span>
+          </div>
+
+          <div class="hadith-card">
+            <div class="hadith-icon-box">🌱</div>
+            <h4 data-i18n="hadith2Title">الغرس والتشجير صدقة جارية ونماء للأرض</h4>
+            <blockquote data-i18n="hadith2Text">قال رسول الله ﷺ: «ما من مسلمٍ يَغرِسُ غَرْسًا، أو يَزرَعُ زَرْعًا، فيأكُلُ منه طيرٌ أو إنسانٌ أو بهيمةٌ، إلا كان له به صدقةٌ».</blockquote>
+            <span class="hadith-source" data-i18n="hadith2Source">متفق عليه</span>
+          </div>
+
+          <div class="hadith-card">
+            <div class="hadith-icon-box">🤲</div>
+            <h4 data-i18n="hadith3Title">الإحسان في الفضاء العام ومغفرة الذنوب</h4>
+            <blockquote data-i18n="hadith3Text">قال رسول الله ﷺ: «بينما رجلٌ يَمشي بطريقٍ وَجَدَ غُصْنَ شَوْكٍ على الطريقِ فأخَّرَه، فشَكَرَ اللهُ له فَغَفَرَ له».</blockquote>
+            <span class="hadith-source" data-i18n="hadith3Source">صحيح البخاري</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Mosque & Neighborhood Coordination Protocol -->
+      <div class="mosque-protocol-box">
+        <h3 class="section-title" data-i18n="mosqueAllianceTitle">بروتوكول "تويزة المسجد والحي" للتوعية والعمل الميداني</h3>
+        <div class="protocol-grid">
+          <div class="protocol-item">
+            <h4 data-i18n="mosquePoint1Title">1. المنبر المسجدي والتوعية في خطب الجمعة</h4>
+            <p data-i18n="mosquePoint1Desc">تخصيص أئمة المساجد حيزاً من خطبة الجمعة أو الدروس الجوارية لحث المصلين على ترشيد النظافة أمام البيوت وصيانة المرافق العامة كواجب ديني وأخلاقي.</p>
+          </div>
+          <div class="protocol-item">
+            <h4 data-i18n="mosquePoint2Title">2. حملات "طهارة المحيط" بعد صلاة الفجر والجمعة</h4>
+            <p data-i18n="mosquePoint2Desc">تنسيق لجان الأحياء وشباب المسجد لتنظيم انطلاقات ميدانية دورية (ساعة واحدة من العمل التشاركي) لرفع الأكياس وكنس محيط المسجد والساحات المجاورة.</p>
+          </div>
+          <div class="protocol-item">
+            <h4 data-i18n="mosquePoint3Title">3. مبادرة "الوقف الأخضر" وتبني الشجيرات</h4>
+            <p data-i18n="mosquePoint3Desc">تشجيع المحسنين والعائلات على غرس شجيرات صنوبر أو بطم أمام المنازل وتعهدها بالسقي كصدقة جارية مأجورة عن الوالدين وعن الموتى.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Mosque Campaign Poster Generator Tool (A4 Printable) -->
+      <div class="poster-tool-container">
+        <div class="poster-tool-header">
+          <div>
+            <h3 data-i18n="posterToolTitle">أداة توليد ملصق الإعلان المسجدي والجداري (A4 Printable)</h3>
+            <p data-i18n="posterToolSubtitle">مولد فوري لملصق الإعلان عن المبادرة التطوعية لتعليقه في لوحة إعلانات المسجد والمحلات الجوارية أو مشاركته عبر WhatsApp</p>
+          </div>
+        </div>
+
+        <div class="poster-tool-controls">
+          <div class="form-group" style="flex: 1;">
+            <label data-i18n="labelSelectCampForPoster">اختر المبادرة لتوليد ملصقها:</label>
+            <select id="posterCampSelect" class="form-control">
+              <!-- Populated dynamically via JS -->
+            </select>
+          </div>
+          <button type="button" class="btn btn-accent" id="btnTriggerPrintPoster">
+            <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <span data-i18n="btnPrintPoster">طباعة الملصق المسجدي 🖨️</span>
+          </button>
+        </div>
+
+        <!-- Live Printable Poster Preview Sheet (A4 Proportion) -->
+        <div class="printable-poster-sheet" id="printablePosterSheet">
+          <div class="poster-header-band">
+            <img src="assets/img/logo.jpg" alt="Logo" class="poster-mini-logo">
+            <div class="poster-header-text">
+              <h4>الجمهورية الجزائرية الديمقراطية الشعبية</h4>
+              <p>ولاية البيض | بلدية البيض | مبادرة التويزة التشاركية «بيّضها»</p>
+            </div>
+            <div class="poster-bismillah">﷽</div>
+          </div>
+
+          <div class="poster-hadith-ribbon">
+            « إِمَاطَةُ الأَذَى عَنِ الطَّرِيقِ صَدَقَةٌ »
+          </div>
+
+          <div class="poster-main-body">
+            <span class="poster-callout">دعوة عامة لكافة سكان ومصلي الحي للمشاركة في:</span>
+            <h2 class="poster-event-title" id="posterPreviewTitle">حملة التويزة الكبرى: تنظيف وتشجير محيط الحي</h2>
+            
+            <div class="poster-details-grid">
+              <div class="poster-detail-item">
+                <span class="poster-detail-label">📅 الموعد وساعة الانطلاق:</span>
+                <span class="poster-detail-val" id="posterPreviewDate">الجمعة 21 أوت 2026 - 08:00 صباحاً</span>
+              </div>
+              <div class="poster-detail-item">
+                <span class="poster-detail-label">📍 مكان التجمع والانطلاق:</span>
+                <span class="poster-detail-val" id="posterPreviewMeeting">ساحة المسجد المركزي للحي</span>
+              </div>
+              <div class="poster-detail-item">
+                <span class="poster-detail-label">🤝 الجهة المبادرة والمنظمة:</span>
+                <span class="poster-detail-val" id="posterPreviewOrg">لجنة الحي وشباب المسجد بالتنسيق مع بلدية البيض</span>
+              </div>
+              <div class="poster-detail-item">
+                <span class="poster-detail-label">🛠️ العتاد والوسائل المطلوبة:</span>
+                <span class="poster-detail-val" id="posterPreviewTools">قفازات، أكياس جمع، مجارف، مياه صالحة للشرب</span>
+              </div>
+            </div>
+
+            <div class="poster-footer-note">
+              « معاً لنعمر فضاءاتنا الحضرية ونحقق سنة الإحسان في بيئتنا »
+              <br>
+              <small>منصة بيّضها - بلدية البيض (تطبيق تطوعي لخدمة الصالح العام)</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Good Neighborhood Charter -->
+      <div class="charter-card">
+        <h3 class="section-title" data-i18n="charterTitle">ميثاق الجوار النظيف وحسن المعاشرة الحضرية</h3>
+        <div class="charter-list">
+          <div class="charter-item">
+            <span class="charter-num">١</span>
+            <p data-i18n="charterItem1">احترام مواعيد مرور شاحنات جمع النفايات المنزلية ووضع الأكياس محكمة الإغلاق.</p>
+          </div>
+          <div class="charter-item">
+            <span class="charter-num">٢</span>
+            <p data-i18n="charterItem2">الامتناع التام عن رمي مخلفات البناء والردام في مجاري الأودية والساحات العمومية.</p>
+          </div>
+          <div class="charter-item">
+            <span class="charter-num">٣</span>
+            <p data-i18n="charterItem3">المحافظة على الحاويات البلدية ونظافة واجهات المنازل والمحلات التجارية.</p>
+          </div>
+          <div class="charter-item">
+            <span class="charter-num">٤</span>
+            <p data-i18n="charterItem4">المشاركة الفعالة في مبادرات "التويزة" الدورية كحق من حقوق الجوار الصالح.</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- TAB 4: Before & After Wall of Impact -->
     <section id="tab-impact" class="tab-pane">
       <div class="section-intro">
         <div>
@@ -200,7 +362,7 @@
       </div>
     </section>
 
-    <!-- TAB 4: Institutional Partnership & Awareness -->
+    <!-- TAB 5: Institutional Partnership & Awareness -->
     <section id="tab-partners" class="tab-pane">
       <div class="section-intro">
         <div>
@@ -289,13 +451,13 @@
         <svg class="icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
         <span data-i18n="navReportBtn">بلاغ</span>
       </button>
+      <button class="mobile-nav-btn" data-tab="ihsan">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <span data-i18n="navIhsan">الإحسان</span>
+      </button>
       <button class="mobile-nav-btn" data-tab="impact">
         <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
         <span data-i18n="navImpact">الإنجازات</span>
-      </button>
-      <button class="mobile-nav-btn" data-tab="partners">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/></svg>
-        <span data-i18n="navPartners">الوقاية</span>
       </button>
     </div>
   </nav>
@@ -608,6 +770,18 @@
   <script src="js/data.js"></script>
   <script src="js/store.js"></script>
   <script src="js/map.js"></script>
+  <script src="js/compressor.js"></script>
   <script src="js/app.js"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Bayedha ServiceWorker active:', reg.scope))
+          .catch(err => console.warn('ServiceWorker registration error:', err));
+      });
+    }
+  </script>
 </body>
 </html>
