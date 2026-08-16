@@ -1,4 +1,4 @@
-// store.js - State Management with Proximity Duplicate Check & Upvoting Engine
+// store.js - State Management with Proximity Duplicate Check & Single Coordinator Engine
 class AppStore {
   constructor() {
     this.STORAGE_KEY_SPOTS = 'bayedha_spots_v1';
@@ -153,7 +153,91 @@ class AppStore {
       this.saveState();
       return true;
     }
-    return false; // Already upvoted
+    return false;
+  }
+
+  // ==========================================
+  // SINGLE COORDINATOR PORTAL METHODS
+  // ==========================================
+
+  // Resolve Spot & Publish to Before/After Wall of Impact
+  resolveSpot(spotId, afterPhotoUrl, cleanedByText) {
+    const spot = this.spots.find(s => s.id === spotId);
+    if (!spot) return false;
+
+    spot.status = 'resolved';
+    spot.beforePhoto = spot.beforePhoto || spot.photo;
+    spot.afterPhoto = afterPhotoUrl || 'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?w=800&auto=format&fit=crop&q=80';
+    spot.cleanedBy = {
+      ar: cleanedByText || 'مصالح بلدية البيض والمتطوعون',
+      fr: cleanedByText || 'Services de l\'APC d\'El Bayadh et Bénévoles'
+    };
+    spot.resolvedAt = new Date().toISOString().split('T')[0];
+
+    this.saveState();
+    return true;
+  }
+
+  // Delete / Moderate Spot (Spam or invalid)
+  deleteSpot(spotId) {
+    const index = this.spots.findIndex(s => s.id === spotId);
+    if (index === -1) return false;
+
+    this.spots.splice(index, 1);
+    this.userActions.upvotedSpots = this.userActions.upvotedSpots.filter(id => id !== spotId);
+    this.saveState();
+    return true;
+  }
+
+  // Generate Structured Municipal WhatsApp / SMS Brief
+  generateMunicipalReport() {
+    const activeBlackspots = this.spots.filter(s => s.status === 'blackspot');
+    const scheduledCampaigns = this.campaigns;
+    const resolvedSpots = this.spots.filter(s => s.status === 'resolved');
+
+    const heavyCount = activeBlackspots.filter(s => s.volume === 'heavy').length;
+    const mediumCount = activeBlackspots.filter(s => s.volume === 'medium').length;
+    const lightCount = activeBlackspots.filter(s => s.volume === 'light' || !s.volume).length;
+
+    const dateStr = new Date().toLocaleDateString(this.lang === 'ar' ? 'ar-DZ' : 'fr-FR');
+
+    if (this.lang === 'ar') {
+      return `🌿 *تقرير المتابعة الميدانية - منصة بيّضها* 🌿
+📍 *بلدية البيض* | التاريخ: ${dateStr}
+
+📊 *الحصيلة الإجمالية:*
+• فضاءات مسترجعة ومؤهلة: ${resolvedSpots.length} موقعاً ✅
+• نقاط سوداء قيد المتابعة: ${activeBlackspots.length} نقطة
+• مبادرات تطوعية مبرمجة: ${scheduledCampaigns.length} حملات 📅
+
+🚜 *احتياجات العتاد المطلوب للنقاط العالقة:*
+• بحاجة لجرافة وشاحنات كبرى (🔴): ${heavyCount} مواقع
+• بحاجة لشاحنة نقل بلدية 3.5T (🟡): ${mediumCount} مواقع
+• تدخل يدوي وتطوعي (🟢): ${lightCount} مواقع
+
+💡 *النقاط ذات الأولوية القصوى:*
+${activeBlackspots.slice(0, 3).map((s, i) => `${i + 1}. ${this.getI18nText(s.title)} (${this.getI18nText(s.neighbourhood)}) - [${s.upvotes || 1} تأكيداً]`).join('\n') || 'لا توجد نقاط عاجلة.'}
+
+_تم إعداد هذا التقرير عبر المنظومة الرقمية الموحدة لبلدية البيض._`;
+    } else {
+      return `🌿 *Synthèse Opérationnelle - Plateforme Bayedha* 🌿
+📍 *Commune d'El Bayadh* | Date : ${dateStr}
+
+📊 *Bilan d'intervention :*
+• Sites réhabilités et assainis : ${resolvedSpots.length} ✅
+• Points noirs en attente : ${activeBlackspots.length}
+• Actions citoyennes programmées : ${scheduledCampaigns.length} 📅
+
+🚜 *Moyens logistiques requis :*
+• Requiert rétrochargeur & bennes lourdes (🔴) : ${heavyCount}
+• Requiert camion communal 3.5T (🟡) : ${mediumCount}
+• Intervention manuelle/bénévoles (🟢) : ${lightCount}
+
+💡 *Sites prioritaires :*
+${activeBlackspots.slice(0, 3).map((s, i) => `${i + 1}. ${this.getI18nText(s.title)} (${this.getI18nText(s.neighbourhood)}) - [${s.upvotes || 1} votes]`).join('\n') || 'Aucun site prioritaire.'}
+
+_Généré via le dispositif numérique Bayedha._`;
+    }
   }
 
   addBlackspot(spotData) {

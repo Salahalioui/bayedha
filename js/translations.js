@@ -1,4 +1,4 @@
-// translations.js - القاموس الرسمي المعتمد مع مدخلات منع التكرار والتأكيد التشاركي
+// translations.js - القاموس الرسمي المعتمد مع مدخلات منع التكرار وبوابة المنسق الموحد
 const i18n = {
   ar: {
     dir: 'rtl',
@@ -15,6 +15,36 @@ const i18n = {
     statsVolunteers: 'متطوع مسجل',
     statsTrees: 'شجيرة مغروسة',
     statsCampaigns: 'مبادرة منجزة',
+    
+    // Coordinator Access
+    btnCoordinatorPortal: 'بوابة المنسق الميداني',
+    coordModalTitle: 'بوابة المنسق الميداني الموحد - بلدية البيض',
+    coordPinPrompt: 'يرجى إدخال الرمز السري للمنسق للمتابعة:',
+    coordPinPh: 'الرمز السري (الافتراضي: 2026)',
+    btnUnlockCoord: 'دخول لوحة التسيير',
+    pinError: 'الرمز السري غير صحيح، يرجى المحاولة ثانية.',
+    
+    // Coordinator Tabs
+    coordTabTriage: '1. فرز ومراجعة البلاغات',
+    coordTabResolve: '2. إغلاق البلاغ وتوثيق (بعد)',
+    coordTabReport: '3. التقرير البلدي الموجز',
+    
+    // Coordinator Actions
+    coordNoSpots: 'لا توجد بلاغات نشطة بانتظار المعالجة حالياً.',
+    btnDeleteSpot: 'حذف البلاغ',
+    btnResolveSpotTrigger: 'معالجة وتوثيق الإنجاز',
+    labelSelectSpotToResolve: 'اختر النقطة السوداء المنجزة:',
+    labelAfterPhoto: 'صورة الموقع بعد انتهاء التنظيف (صورة واحدة):',
+    labelCleanedByOrg: 'الجهة التي أنجزت التدخل الميداني:',
+    phCleanedByOrg: 'مثال: عمال مصلحة النظافة لبلدية البيض + فوج الفلاح للكشافة',
+    btnSubmitResolution: 'اعتماد وتوثيق الفضاء في سجل الإنجازات',
+    toastSpotResolved: 'تم إغلاق البلاغ وتوثيقه بنجاح في سجل الإنجازات البيئية (قبل/بعد).',
+    toastSpotDeleted: 'تم حذف البلاغ من الخارطة.',
+    
+    // Coordinator Municipal Report
+    coordReportTitle: 'التقرير الميداني الدوري الجاهز للإرسال (WhatsApp / SMS):',
+    btnCopyReport: 'نسخ التقرير الميداني بنقرة واحدة',
+    toastReportCopied: 'تم نسخ التقرير إلى الحافظة، يمكنك لصقه وإرساله للمسؤولين.',
     
     // Map Controls & Filters
     filterAll: 'كافة المواقع',
@@ -163,6 +193,36 @@ const i18n = {
     statsVolunteers: 'Bénévoles mobilisés',
     statsTrees: 'Arbustes plantés',
     statsCampaigns: 'Actions achevées',
+    
+    // Coordinator Access
+    btnCoordinatorPortal: 'Espace Coordinateur',
+    coordModalTitle: 'Portail du Coordinateur Unique - El Bayadh',
+    coordPinPrompt: 'Veuillez saisir le code PIN de coordination :',
+    coordPinPh: 'Code PIN (Défaut : 2026)',
+    btnUnlockCoord: 'Accéder à la gestion',
+    pinError: 'Code PIN erroné. Veuillez réessayer.',
+    
+    // Coordinator Tabs
+    coordTabTriage: '1. Modération & Tri',
+    coordTabResolve: '2. Clôturer & Documenter',
+    coordTabReport: '3. Synthèse Communale',
+    
+    // Coordinator Actions
+    coordNoSpots: 'Aucun signalement en attente pour le moment.',
+    btnDeleteSpot: 'Supprimer',
+    btnResolveSpotTrigger: 'Résoudre & Documenter',
+    labelSelectSpotToResolve: 'Sélectionnez le site assaini :',
+    labelAfterPhoto: 'Cliché du site après réhabilitation (1 photo) :',
+    labelCleanedByOrg: 'Structure ayant conduit l\'intervention :',
+    phCleanedByOrg: 'Ex: Agents communaux APC + Groupe Scouts SMA',
+    btnSubmitResolution: 'Publier dans le Registre des Réalisations',
+    toastSpotResolved: 'Point noir résolu et archivé avec succès dans le registre Avant/Après.',
+    toastSpotDeleted: 'Signalement supprimé de la cartographie.',
+    
+    // Coordinator Municipal Report
+    coordReportTitle: 'Synthèse opérationnelle prête à transmettre (WhatsApp / SMS) :',
+    btnCopyReport: 'Copier la synthèse en un clic',
+    toastReportCopied: 'Synthèse copiée dans le presse-papier.',
     
     // Map Controls & Filters
     filterAll: 'Tous les sites',
