@@ -1,4 +1,4 @@
-// app.js - Main Application Orchestrator with Single Coordinator Engine
+// app.js - Main Application Orchestrator with Single Coordinator, Image Compressor & Mosque Poster Generator
 class BayedhaApp {
   constructor() {
     this.store = window.appStore;
@@ -26,6 +26,7 @@ class BayedhaApp {
     this.bindEvents();
     this.bindStructuredFormEvents();
     this.bindCoordinatorEvents();
+    this.bindPosterGeneratorEvents();
     this.initBeforeAfterSliders();
   }
 
@@ -58,6 +59,7 @@ class BayedhaApp {
     this.renderMapAndSidebar();
     this.renderCampaigns();
     this.renderBeforeAfter();
+    this.renderPosterCampaignsList();
     if (this.isCoordAuthenticated) {
       this.renderCoordinatorDashboard();
     }
@@ -239,6 +241,54 @@ class BayedhaApp {
     }).join('');
 
     this.initBeforeAfterSliders();
+  }
+
+  // Render & Update Mosque Printable Poster
+  renderPosterCampaignsList() {
+    const selectEl = document.getElementById('posterCampSelect');
+    if (!selectEl) return;
+
+    const campaigns = this.store.campaigns;
+    selectEl.innerHTML = campaigns.map(camp => {
+      return `<option value="${camp.id}">${this.store.getI18nText(camp.title)} (${camp.date})</option>`;
+    }).join('');
+
+    if (campaigns.length > 0) {
+      this.updatePosterPreview(campaigns[0].id);
+    }
+  }
+
+  updatePosterPreview(campId) {
+    const camp = this.store.campaigns.find(c => c.id === campId);
+    if (!camp) return;
+
+    const elTitle = document.getElementById('posterPreviewTitle');
+    const elDate = document.getElementById('posterPreviewDate');
+    const elMeeting = document.getElementById('posterPreviewMeeting');
+    const elOrg = document.getElementById('posterPreviewOrg');
+    const elTools = document.getElementById('posterPreviewTools');
+
+    if (elTitle) elTitle.textContent = this.store.getI18nText(camp.title);
+    if (elDate) elDate.textContent = camp.date;
+    if (elMeeting) elMeeting.textContent = this.store.getI18nText(camp.meetingPoint);
+    if (elOrg) elOrg.textContent = this.store.getI18nText(camp.organizer);
+    if (elTools) elTools.textContent = this.store.getI18nArray(camp.toolsNeeded).join('، ');
+  }
+
+  bindPosterGeneratorEvents() {
+    const selectEl = document.getElementById('posterCampSelect');
+    if (selectEl) {
+      selectEl.addEventListener('change', (e) => {
+        this.updatePosterPreview(e.target.value);
+      });
+    }
+
+    const btnPrint = document.getElementById('btnTriggerPrintPoster');
+    if (btnPrint) {
+      btnPrint.addEventListener('click', () => {
+        window.print();
+      });
+    }
   }
 
   initBeforeAfterSliders() {
@@ -513,7 +563,7 @@ class BayedhaApp {
       });
     });
 
-    // After-photo file uploader
+    // After-photo file uploader with Compression
     const afterFileInput = document.getElementById('coordAfterPhotoInput');
     const afterPhotoBox = document.getElementById('coordAfterPhotoBox');
     const afterPhotoPreview = document.getElementById('coordAfterPhotoPreview');
@@ -521,19 +571,30 @@ class BayedhaApp {
 
     if (afterPhotoBox && afterFileInput) {
       afterPhotoBox.addEventListener('click', () => afterFileInput.click());
-      afterFileInput.addEventListener('change', (e) => {
+      afterFileInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (file) {
-          const reader = new FileReader();
-          reader.onload = (ev) => {
-            this.coordAfterPhotoData = ev.target.result;
+          try {
+            // Compress with Canvas ImageCompressor
+            this.coordAfterPhotoData = await window.ImageCompressor.compress(file, 1200, 0.72);
             if (afterPhotoPreview) {
               afterPhotoPreview.src = this.coordAfterPhotoData;
               afterPhotoPreview.style.display = 'block';
               if (afterPhotoPrompt) afterPhotoPrompt.style.display = 'none';
             }
-          };
-          reader.readAsDataURL(file);
+          } catch (err) {
+            console.warn('Compression error, using standard reader:', err);
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              this.coordAfterPhotoData = ev.target.result;
+              if (afterPhotoPreview) {
+                afterPhotoPreview.src = this.coordAfterPhotoData;
+                afterPhotoPreview.style.display = 'block';
+                if (afterPhotoPrompt) afterPhotoPrompt.style.display = 'none';
+              }
+            };
+            reader.readAsDataURL(file);
+          }
         }
       });
     }
@@ -742,7 +803,7 @@ class BayedhaApp {
       });
     }
 
-    // 6. Submit Structured Report
+    // 6. Submit Structured Report with Compressed Image
     const reportForm = document.getElementById('reportForm');
     if (reportForm) {
       reportForm.addEventListener('submit', (e) => {
@@ -888,7 +949,7 @@ class BayedhaApp {
       }
     });
 
-    // Photo Input Handling
+    // Photo Input Handling with Auto-Compression
     const fileInput = document.getElementById('reportPhotoInput');
     const photoBox = document.getElementById('photoUploaderBox');
     const photoPreview = document.getElementById('photoPreviewImg');
@@ -897,19 +958,29 @@ class BayedhaApp {
     if (photoBox && fileInput) {
       photoBox.addEventListener('click', () => fileInput.click());
 
-      fileInput.addEventListener('change', (e) => {
+      fileInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (file) {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            this.uploadedPhotoData = event.target.result;
+          try {
+            this.uploadedPhotoData = await window.ImageCompressor.compress(file, 1200, 0.72);
             if (photoPreview) {
               photoPreview.src = this.uploadedPhotoData;
               photoPreview.style.display = 'block';
               if (photoPrompt) photoPrompt.style.display = 'none';
             }
-          };
-          reader.readAsDataURL(file);
+          } catch (err) {
+            console.warn('Fallback standard reader for upload:', err);
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              this.uploadedPhotoData = event.target.result;
+              if (photoPreview) {
+                photoPreview.src = this.uploadedPhotoData;
+                photoPreview.style.display = 'block';
+                if (photoPrompt) photoPrompt.style.display = 'none';
+              }
+            };
+            reader.readAsDataURL(file);
+          }
         }
       });
     }
