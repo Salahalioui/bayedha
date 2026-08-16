@@ -140,6 +140,24 @@ class BayedhaApp {
     const t = this.store.getT();
     const campaigns = this.store.campaigns;
 
+    if (campaigns.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 48px 20px; background: var(--bg-surface); border-radius: var(--radius-md); border: 1.5px dashed var(--border-medium);">
+          <div style="font-size: 32px; margin-bottom: 10px;">📅</div>
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--color-pine-900); margin-bottom: 6px;">
+            ${this.store.lang === 'ar' ? 'لا توجد مبادرات تطوعية مبرمجة حالياً' : 'Aucune action de volontariat programmée'}
+          </h3>
+          <p style="font-size: 13px; color: var(--text-secondary); max-width: 460px; margin: 0 auto 16px auto;">
+            ${this.store.lang === 'ar' ? 'كن أول من يطلق مبادرة "تويزة" لتنظيف حي أو تشجير فضاء في بلدية البيض.' : 'Soyez le premier à programmer une opération citoyenne de nettoyage ou de reboisement.'}
+          </p>
+          <button class="btn btn-primary" onclick="window.app.openModal('newCampaignModal')">
+            + ${this.store.lang === 'ar' ? 'برمجة أول مبادرة تطوعية' : 'Programmer une initiative'}
+          </button>
+        </div>
+      `;
+      return;
+    }
+
     container.innerHTML = campaigns.map(camp => {
       const title = this.store.getI18nText(camp.title);
       const meetingPoint = this.store.getI18nText(camp.meetingPoint);
@@ -205,6 +223,21 @@ class BayedhaApp {
     const t = this.store.getT();
     const resolvedSpots = this.store.spots.filter(s => s.status === 'resolved');
 
+    if (resolvedSpots.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 48px 20px; background: var(--bg-surface); border-radius: var(--radius-md); border: 1.5px dashed var(--border-medium);">
+          <div style="font-size: 32px; margin-bottom: 10px;">🌱</div>
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--color-pine-900); margin-bottom: 6px;">
+            ${this.store.lang === 'ar' ? 'سجل الإنجازات بانتظار توثيق أول فضاء مؤهل' : 'Registre des réalisations en attente'}
+          </h3>
+          <p style="font-size: 13px; color: var(--text-secondary); max-width: 480px; margin: 0 auto;">
+            ${this.store.lang === 'ar' ? 'بمجرد أن تقوم مصالح البلدية أو لجان الأحياء بمعالجة نقطة سوداء، سيتم توثيق الوضع (قبل / بعد) هنا مباشرة.' : 'Dès qu\'un point noir est résolu par les services ou les citoyens, le résultat Avant/Après sera documenté ici.'}
+          </p>
+        </div>
+      `;
+      return;
+    }
+
     container.innerHTML = resolvedSpots.map(spot => {
       const title = this.store.getI18nText(spot.title);
       const neighbourhood = this.store.getI18nText(spot.neighbourhood);
@@ -249,13 +282,27 @@ class BayedhaApp {
     if (!selectEl) return;
 
     const campaigns = this.store.campaigns;
+    if (campaigns.length === 0) {
+      selectEl.innerHTML = `<option value="">${this.store.lang === 'ar' ? '— يرجى برمجة مبادرة أولاً لتوليد ملصقها —' : '— Aucune initiative disponible pour l\'affiche —'}</option>`;
+      const elTitle = document.getElementById('posterPreviewTitle');
+      const elDate = document.getElementById('posterPreviewDate');
+      const elMeeting = document.getElementById('posterPreviewMeeting');
+      const elOrg = document.getElementById('posterPreviewOrg');
+      const elTools = document.getElementById('posterPreviewTools');
+
+      if (elTitle) elTitle.textContent = this.store.lang === 'ar' ? 'مبادرة تطوعية لتنظيف وتشجير الحي' : 'Initiative citoyenne de salubrité et reboisement';
+      if (elDate) elDate.textContent = this.store.lang === 'ar' ? 'موعد الانطلاق يحدد عبر المنصة' : 'Date à définir';
+      if (elMeeting) elMeeting.textContent = this.store.lang === 'ar' ? 'ساحة المسجد أو الحي المحدد' : 'Lieu de rassemblement';
+      if (elOrg) elOrg.textContent = this.store.lang === 'ar' ? 'لجنة الحي وشباب المسجد بالتنسيق مع بلدية البيض' : 'Comité de quartier & Citoyens';
+      if (elTools) elTools.textContent = this.store.lang === 'ar' ? 'أكياس جمع، قفازات، مجارف' : 'Sacs, gants, pelles';
+      return;
+    }
+
     selectEl.innerHTML = campaigns.map(camp => {
       return `<option value="${camp.id}">${this.store.getI18nText(camp.title)} (${camp.date})</option>`;
     }).join('');
 
-    if (campaigns.length > 0) {
-      this.updatePosterPreview(campaigns[0].id);
-    }
+    this.updatePosterPreview(campaigns[0].id);
   }
 
   updatePosterPreview(campId) {
