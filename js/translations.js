@@ -1,4 +1,4 @@
-// translations.js - القاموس الرسمي المعتمد مع مدخلات منع التكرار وبوابة المنسق الموحد
+// translations.js - القاموس الرسمي المعتمد (الرصد، المنسق الموحد، وميثاق الإحسان الحضري وشراكة المساجد)
 const i18n = {
   ar: {
     dir: 'rtl',
@@ -6,6 +6,7 @@ const i18n = {
     appTagline: 'المنصة الرقمية للعمل التطوعي والارتقاء بالبيئة الحضرية - بلدية البيض',
     navMap: 'الخارطة التفاعلية والرصد',
     navCampaigns: 'المبادرات التطوعية',
+    navIhsan: 'ميثاق الإحسان والمساجد',
     navImpact: 'سجل الإنجازات البيئية',
     navPartners: 'التنسيق المؤسساتي والوقاية',
     navReportBtn: 'تسجيل بلاغ عن نقطة سوداء',
@@ -46,6 +47,49 @@ const i18n = {
     btnCopyReport: 'نسخ التقرير الميداني بنقرة واحدة',
     toastReportCopied: 'تم نسخ التقرير إلى الحافظة، يمكنك لصقه وإرساله للمسؤولين.',
     
+    // ==========================================
+    // ISLAMIC CIVIC CHARTER & MOSQUE ALLIANCE
+    // ==========================================
+    ihsanHeaderTitle: 'ميثاق الإحسان الحضري وتويزة المساجد ولجان الأحياء',
+    ihsanHeaderSubtitle: 'تأصيل العمل البيئي كقيمة إيمانية وسنة نبوية راسخة تعزز التضامن الجواري في مدينة البيض',
+    
+    hadithSectionTitle: 'الأصول الشرعية والسنن النبوية في طهارة المحيط والغرس',
+    hadith1Title: 'إماطة الأذى شعبة من شعب الإيمان',
+    hadith1Text: 'قال رسول الله ﷺ: «الإيمانُ بضعٌ وسبعونَ شُعبةً، فأفضلُها قولُ لا إله إلا الله، وأدناها إماطةُ الأذى عن الطريق».',
+    hadith1Source: 'صحيح مسلم',
+    
+    hadith2Title: 'الغرس والتشجير صدقة جارية ونماء للأرض',
+    hadith2Text: 'قال رسول الله ﷺ: «ما من مسلمٍ يَغرِسُ غَرْسًا، أو يَزرَعُ زَرْعًا، فيأكُلُ منه طيرٌ أو إنسانٌ أو بهيمةٌ، إلا كان له به صدقةٌ».',
+    hadith2Source: 'متفق عليه',
+    
+    hadith3Title: 'الإحسان في الفضاء العام ومغفرة الذنوب',
+    hadith3Text: 'قال رسول الله ﷺ: «بينما رجلٌ يَمشي بطريقٍ وَجَدَ غُصْنَ شَوْكٍ على الطريقِ فأخَّرَه، فشَكَرَ اللهُ له فَغَفَرَ له».',
+    hadith3Source: 'صحيح البخاري',
+    
+    mosqueAllianceTitle: 'بروتوكول "تويزة المسجد والحي" للتوعية والعمل الميداني',
+    mosquePoint1Title: '1. المنبر المسجدي والتوعية في خطب الجمعة',
+    mosquePoint1Desc: 'تخصيص أئمة المساجد حيزاً من خطبة الجمعة أو الدروس الجوارية لحث المصلين على ترشيد النظافة أمام البيوت وصيانة المرافق العامة كواجب ديني وأخلاقي.',
+    
+    mosquePoint2Title: '2. حملات "طهارة المحيط" بعد صلاة الفجر والجمعة',
+    mosquePoint2Desc: 'تنسيق لجان الأحياء وشباب المسجد لتنظيم انطلاقات ميدانية دورية (ساعة واحدة من العمل التشاركي) لرفع الأكياس وكنس محيط المسجد والساحات المجاورة.',
+    
+    mosquePoint3Title: '3. مبادرة "الوقف الأخضر" وتبني الشجيرات',
+    mosquePoint3Desc: 'تشجيع المحسنين والعائلات على غرس شجيرات صنوبر أو بطم أمام المنازل وتعهدها بالسقي كصدقة جارية مأجورة عن الوالدين وعن الموتى.',
+    
+    // Mosque Campaign Poster Generator Tool
+    posterToolTitle: 'أداة توليد ملصق الإعلان المسجدي والجداري (A4 Printable)',
+    posterToolSubtitle: 'مولد فوري لملصق الإعلان عن المبادرة التطوعية لتعليقه في لوحة إعلانات المسجد والمحلات الجوارية أو مشاركته عبر WhatsApp',
+    labelSelectCampForPoster: 'اختر المبادرة لتوليد ملصقها:',
+    btnGeneratePoster: 'معاينة وطباعة الملصق المسجدي (A4)',
+    btnPrintPoster: 'طباعة الملصق المسجدي 🖨️',
+    
+    // Good Neighborhood Charter
+    charterTitle: 'ميثاق الجوار النظيف وحسن المعاشرة الحضرية',
+    charterItem1: 'احترام مواعيد مرور شاحنات جمع النفايات المنزلية ووضع الأكياس محكمة الإغلاق.',
+    charterItem2: 'الامتناع التام عن رمي مخلفات البناء والردام في مجاري الأودية والساحات العمومية.',
+    charterItem3: 'المحافظة على الحاويات البلدية ونظافة واجهات المنازل والمحلات التجارية.',
+    charterItem4: 'المشاركة الفعالة في مبادرات "التويزة" الدورية كحق من حقوق الجوار الصالح.',
+
     // Map Controls & Filters
     filterAll: 'كافة المواقع',
     filterBlackspots: 'نقاط سوداء مرصودة',
@@ -73,7 +117,7 @@ const i18n = {
     reportSubtitle: 'المساهمة في المجهود المحلي لمكافحة المكبات العشوائية وتحديد العتاد اللازم للتدخل',
     
     labelPhotoLoc: '1. المعاينة المصورة والإحداثيات الميدانية',
-    photoHint: 'انقر لالتقاط صورة مباشرة أو استيرادها',
+    photoHint: 'انقر لالتقاط صورة مباشرة أو استيرادها (يتم ضغطها تلقائياً)',
     locDetected: 'تم التقاط الموقع التلقائي',
     locNotDetected: 'انقر لتحديد الإحداثيات',
     btnAutoGPS: 'تحديد موقعي التلقائي',
@@ -184,6 +228,7 @@ const i18n = {
     appTagline: 'Plateforme citoyenne de salubrité publique et valorisation environnementale - El Bayadh',
     navMap: 'Cartographie & Signalement',
     navCampaigns: 'Actions Citoyennes',
+    navIhsan: 'Éco-Civisme & Mosquées',
     navImpact: 'Registre des Réalisations',
     navPartners: 'Coordination & Prévention',
     navReportBtn: 'Déposer un signalement',
@@ -224,6 +269,49 @@ const i18n = {
     btnCopyReport: 'Copier la synthèse en un clic',
     toastReportCopied: 'Synthèse copiée dans le presse-papier.',
     
+    // ==========================================
+    // ISLAMIC CIVIC CHARTER & MOSQUE ALLIANCE
+    // ==========================================
+    ihsanHeaderTitle: 'Charte d\'Éco-Civisme et Alliance des Mosquées & Comités de Quartier',
+    ihsanHeaderSubtitle: 'Ancrer l\'action environnementale dans les valeurs éthiques et la tradition de solidarité communautaire (Touiza)',
+    
+    hadithSectionTitle: 'Fondements Éthiques et Préceptes de Salubrité et de Reboisement',
+    hadith1Title: 'L\'enlèvement des nuisances comme acte de foi',
+    hadith1Text: 'Le Prophète ﷺ a dit : « La foi comporte plus de soixante-dix branches... et la plus modeste est d\'enlever ce qui nuit sur la voie publique. »',
+    hadith1Source: 'Sahih Muslim',
+    
+    hadith2Title: 'La plantation d\'arbres comme aumône continue',
+    hadith2Text: 'Le Prophète ﷺ a dit : « Chaque fois qu\'un musulman plante un arbre ou sème une graine et qu\'un oiseau, un homme ou une bête en mange, cela lui est compté comme une aumône. »',
+    hadith2Source: 'Muttafaq \'alaih',
+    
+    hadith3Title: 'La bienfaisance dans l\'espace public',
+    hadith3Text: 'Le Prophète ﷺ a dit : « Un homme qui cheminait trouva une branche d\'épines sur la route et la retira ; Dieu lui en sut gré et lui accorda Son pardon. »',
+    hadith3Source: 'Sahih Al-Bukhari',
+    
+    mosqueAllianceTitle: 'Protocole "Touiza Mosquée & Quartier" : Mobilisation de Proximité',
+    mosquePoint1Title: '1. Tribune de la Mosquée et Sensibilisation du Vendredi',
+    mosquePoint1Desc: 'Les imams consacrent un moment lors des prêches pour rappeler aux fidèles le devoir civique et religieux de propreté devant les demeures et les commerces.',
+    
+    mosquePoint2Title: '2. Opérations "Quartier Propre" après la prière du Vendredi ou de l\'Aube',
+    mosquePoint2Desc: 'Coordination entre comités de quartier et jeunes pour organiser des sessions d\'assainissement ciblées d\'une heure autour des mosquées et des places.',
+    
+    mosquePoint3Title: '3. Initiative "Waqf Vert" et Parrainage d\'Arbustes',
+    mosquePoint3Desc: 'Encourager les familles et bienfaiteurs à planter et arroser des pins d\'Alep devant leurs résidences comme aumône continue pérenne.',
+    
+    // Mosque Campaign Poster Generator Tool
+    posterToolTitle: 'Générateur d\'Affiche d\'Information Communautaire (Format A4)',
+    posterToolSubtitle: 'Outil de génération instantanée d\'affiche officielle prête à imprimer et placarder sur les panneaux de la mosquée ou à diffuser sur WhatsApp',
+    labelSelectCampForPoster: 'Sélectionnez l\'opération citoyenne :',
+    btnGeneratePoster: 'Aperçu & Impression de l\'Affiche (A4)',
+    btnPrintPoster: 'Imprimer l\'Affiche 🖨️',
+    
+    // Good Neighborhood Charter
+    charterTitle: 'Charte du Bon Voisinage et Respect du Cadre de Vie',
+    charterItem1: 'Respect strict des horaires de collecte des ordures ménagères dans des sacs hermétiques.',
+    charterItem2: 'Interdiction totale de déverser des gravats et déblais de chantiers dans les lits d\'oueds et les espaces publics.',
+    charterItem3: 'Préservation des bacs à ordures communaux et maintien de la propreté des façades et devantures.',
+    charterItem4: 'Participation active aux journées collectives de "Touiza" comme marque de civisme et de fraternité.',
+
     // Map Controls & Filters
     filterAll: 'Tous les sites',
     filterBlackspots: 'Points noirs recensés',
@@ -251,7 +339,7 @@ const i18n = {
     reportSubtitle: 'Participez à la cartographie des décharges sauvages et à la qualification du matériel d\'intervention requis',
     
     labelPhotoLoc: '1. Constat photographique et géolocalisation',
-    photoHint: 'Cliquez pour capturer ou importer un cliché',
+    photoHint: 'Cliquez pour capturer ou importer un cliché (Compression automatique)',
     locDetected: 'Position automatique enregistrée',
     locNotDetected: 'Cliquez pour enregistrer les coordonnées',
     btnAutoGPS: 'Géolocalisation automatique',
