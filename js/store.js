@@ -1,10 +1,10 @@
 // store.js - State Management with Proximity Duplicate Check, Single Coordinator & Supabase Cloud Live Sync
 class AppStore {
   constructor() {
-    this.STORAGE_KEY_SPOTS = 'bayedha_spots_v1';
-    this.STORAGE_KEY_CAMPAIGNS = 'bayedha_campaigns_v1';
+    this.STORAGE_KEY_SPOTS = 'bayedha_spots_v3';
+    this.STORAGE_KEY_CAMPAIGNS = 'bayedha_campaigns_v3';
     this.STORAGE_KEY_LANG = 'bayedha_lang_v1';
-    this.STORAGE_KEY_USER_ACTIONS = 'bayedha_user_actions_v1';
+    this.STORAGE_KEY_USER_ACTIONS = 'bayedha_user_actions_v3';
     
     this.lang = localStorage.getItem(this.STORAGE_KEY_LANG) || 'ar';
     this.listeners = [];
@@ -253,15 +253,24 @@ class AppStore {
 
   getStats() {
     const resolvedCount = this.spots.filter(s => s.status === 'resolved').length;
-    const baseVolunteers = 185 + (this.userActions.joinedCampaigns.length * 1);
-    const totalTrees = 320 + (resolvedCount > 2 ? (resolvedCount - 2) * 50 : 0);
-    const totalCampaignsDone = 9 + resolvedCount;
+    const totalCampaigns = this.campaigns.length;
+    let totalVolunteers = 0;
+    this.campaigns.forEach(c => {
+      totalVolunteers += (c.volunteersRegistered || 0);
+    });
+    let totalTrees = 0;
+    this.campaigns.filter(c => c.type === 'tree').forEach(c => {
+      totalTrees += (c.treesTarget || 50);
+    });
+    if (resolvedCount > 0) {
+      totalTrees += resolvedCount * 15;
+    }
 
     return {
       cleanedCount: resolvedCount,
-      volunteersCount: baseVolunteers,
+      volunteersCount: totalVolunteers,
       treesCount: totalTrees,
-      campaignsCount: totalCampaignsDone
+      campaignsCount: totalCampaigns
     };
   }
 
