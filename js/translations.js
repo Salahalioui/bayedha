@@ -21,7 +21,7 @@ const i18n = {
     btnCoordinatorPortal: 'بوابة المنسق الميداني',
     coordModalTitle: 'بوابة المنسق الميداني الموحد - بلدية البيض',
     coordPinPrompt: 'يرجى إدخال الرمز السري للمنسق للمتابعة:',
-    coordPinPh: 'الرمز السري (الافتراضي: 2026)',
+    coordPinPh: 'الرمز السري للمنسق',
     btnUnlockCoord: 'دخول لوحة التسيير',
     pinError: 'الرمز السري غير صحيح، يرجى المحاولة ثانية.',
     
@@ -243,7 +243,7 @@ const i18n = {
     btnCoordinatorPortal: 'Espace Coordinateur',
     coordModalTitle: 'Portail du Coordinateur Unique - El Bayadh',
     coordPinPrompt: 'Veuillez saisir le code PIN de coordination :',
-    coordPinPh: 'Code PIN (Défaut : 2026)',
+    coordPinPh: 'Code PIN coordinateur',
     btnUnlockCoord: 'Accéder à la gestion',
     pinError: 'Code PIN erroné. Veuillez réessayer.',
     
