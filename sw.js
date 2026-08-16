@@ -1,11 +1,12 @@
 // sw.js - Service Worker for Bayedha Progressive Web App (Offline Capabilities)
-const CACHE_NAME = 'bayedha-cache-v1.3';
+const CACHE_NAME = 'bayedha-cache-v1.4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './css/main.css',
   './js/translations.js',
   './js/data.js',
+  './js/supabase-client.js',
   './js/store.js',
   './js/map.js',
   './js/compressor.js',
@@ -38,7 +39,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Try network first, fall back to cache
+  // Network first, fall back to cache
   event.respondWith(
     fetch(event.request)
       .then((response) => {
