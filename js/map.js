@@ -6,7 +6,7 @@ class BayedhaMap {
     this.markersLayer = null;
     this.tempMarker = null;
     this.userLocationMarker = null;
-    this.cityCenter = [32.6990, 1.0125]; // El Bayadh coordinates
+    this.cityCenter = [33.6835, 1.0163]; // El Bayadh city center coordinates
     this.defaultZoom = 14;
     this.isPickingLocation = false;
     this.onLocationPickedCallback = null;
