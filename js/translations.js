@@ -1,0 +1,300 @@
+// translations.js - القاموس الرسمي المعتمد مع مدخلات منع التكرار والتأكيد التشاركي
+const i18n = {
+  ar: {
+    dir: 'rtl',
+    appName: 'بيّضها',
+    appTagline: 'المنصة الرقمية للعمل التطوعي والارتقاء بالبيئة الحضرية - بلدية البيض',
+    navMap: 'الخارطة التفاعلية والرصد',
+    navCampaigns: 'المبادرات التطوعية',
+    navImpact: 'سجل الإنجازات البيئية',
+    navPartners: 'التنسيق المؤسساتي والوقاية',
+    navReportBtn: 'تسجيل بلاغ عن نقطة سوداء',
+    
+    // Header & Quick Stats
+    statsCleaned: 'موقع تمت معالجته',
+    statsVolunteers: 'متطوع مسجل',
+    statsTrees: 'شجيرة مغروسة',
+    statsCampaigns: 'مبادرة منجزة',
+    
+    // Map Controls & Filters
+    filterAll: 'كافة المواقع',
+    filterBlackspots: 'نقاط سوداء مرصودة',
+    filterCampaigns: 'مبادرات مبرمجة',
+    filterResolved: 'فضاءات مؤهلة ومسترجعة',
+    myLocation: 'تحديد موقعي الجغرافي',
+    mapLegend: 'دليل ورصد الأحياء الحضرية',
+    legendBlackspot: 'نقطة سوداء تستوجب التدخل',
+    legendCampaign: 'مبادرة تطوعية مبرمجة',
+    legendResolved: 'فضاء تم تنظيفه وإعادة تأهيله',
+    viewToggleMap: 'عرض الخارطة',
+    viewToggleList: 'عرض القائمة',
+    
+    // Proximity & Duplicate Prevention
+    proximityAlertTitle: 'تنبيه: يوجد بلاغ قائم بالقرب من هذا الموقع',
+    proximityAlertDesc: 'تم رصد نقطة سوداء مسبقاً على بعد {dist} متراً من موقعك. تفادياً لتكرار البيانات، يمكنك تأكيد البلاغ القائم لرفع درجة استعجاله لدى المصالح المعنية.',
+    btnConfirmExisting: 'تأكيد ودعم هذا البلاغ القائم (+1 تأكيد)',
+    btnConfirmedAlready: 'لقد أكدت هذا البلاغ مسبقاً ✓',
+    btnProceedAnyway: 'متابعة تسجيل بلاغ منفصل',
+    upvotesCount: 'مواطناً أكدوا هذا البلاغ',
+    btnUpvoteSpot: 'تأكيد وجود هذه النقطة',
+    
+    // Structured Report Modal
+    reportTitle: 'تسجيل بلاغ عن نقطة سوداء أو تشوه بيئي',
+    reportSubtitle: 'المساهمة في المجهود المحلي لمكافحة المكبات العشوائية وتحديد العتاد اللازم للتدخل',
+    
+    labelPhotoLoc: '1. المعاينة المصورة والإحداثيات الميدانية',
+    photoHint: 'انقر لالتقاط صورة مباشرة أو استيرادها',
+    locDetected: 'تم التقاط الموقع التلقائي',
+    locNotDetected: 'انقر لتحديد الإحداثيات',
+    btnAutoGPS: 'تحديد موقعي التلقائي',
+    btnPickOnMap: 'تعديل أو تحديد على الخارطة',
+    
+    labelNeighbourhood: '2. الحي / التجمع السكاني (كتابة يدوية) *',
+    phNeighbourhood: 'اكتب اسم الحي أو المعلم المجاور (مثال: حي المصالحة، وادي الفحم، حي السلام...)',
+    
+    labelVolume: '3. الحجم التقديري ونوع التدخل والعتاد المطلوب *',
+    volLightTitle: 'حجم محدود (تدخل يدوي)',
+    volLightDesc: 'مجهود تطوعي بأكياس جمع وقفازات عبر حملة شبابية بسيطة.',
+    volMediumTitle: 'حجم متوسط (شاحنة نقل 3.5 طن)',
+    volMediumDesc: 'يستلزم مساندة شاحنة نقل تابعة للبلدية لرفع الأكياس والكتل.',
+    volHeavyTitle: 'حجم ضخم (آليات ثقيلة وجرافة)',
+    volHeavyDesc: 'يستوجب جرافة (Rétrochargeur) وشاحنات ذات حمولة كبرى لرفع الردم.',
+    
+    labelMaterials: '4. المكونات الغالبة على النفايات (اختر ما ينطبق)',
+    matPlastic: 'أكياس ومواد بلاستيكية',
+    matRubble: 'ردام وركام أشغال بناء',
+    matOrganic: 'نفايات منزلية عضوية',
+    matTires: 'إطارات وعجلات مطاطية',
+    matMetal: 'خردة ومعادن صلبة',
+    matGreen: 'بقايا تقليم أشجار وأعشاب',
+    
+    labelAccess: '5. مسلك وصول الشاحنات والآليات',
+    accessPaved: 'مسلك معبد ومتاح للشاحنات الكبرى',
+    accessNarrow: 'مسلك ضيق أو تضاريس وعرة (وصول يدوي فقط)',
+    
+    labelNotes: '6. ملاحظات إضافية أو معلم مميز (اختياري)',
+    phNotes: 'أي توضيح يفيد فرق التدخل الميداني...',
+    
+    btnSubmitReport: 'اعتماد وتسجيل البلاغ فوراً',
+    
+    // Campaign Card & Hub
+    campaignsTitle: 'المبادرات التطوعية وحملات "التويزة" المبرمجة',
+    campaignsSubtitle: 'تنظيم وتوحيد الجهود الميدانية لجمعيات المجتمع المدني والمواطنين بالتنسيق مع المصالح العمومية',
+    btnNewCampaign: 'إدراج مبادرة تطوعية جديدة',
+    btnJoinCampaign: 'تأكيد المشاركة في المبادرة',
+    btnJoined: 'تم تسجيل مشاركتكم بنجاح',
+    campaignDate: 'تاريخ وتوقيت الانطلاق',
+    campaignLocation: 'نقطة التجمع والانطلاق',
+    campaignOrganizer: 'الهيئة المبادرة / المنظمة',
+    campaignTarget: 'الأهداف الميدانية المسطرة',
+    campaignToolsNeeded: 'الوسائل والعتاد المستلزم',
+    campaignVolunteers: 'متطوع مسجل في المبادرة',
+    
+    // New Campaign Modal
+    newCampaignTitle: 'برمجة مبادرة تطوعية ميدانية',
+    newCampaignSubtitle: 'تأطير حملة نظافة، تشجير، أو تهيئة حضرية بالتنسيق مع لجان الأحياء والجهات الوصية',
+    labelCampTitle: 'عنوان المبادرة التطوعية *',
+    phCampTitle: 'مثال: حملة تطهير مجرى وادي الفحم وغرس شجيرات الصنوبر',
+    labelCampType: 'طبيعة النشاط التطوعي',
+    typeClean: 'رفع النفايات وتنظيف المحيط العمراني',
+    typeTree: 'تشجير وغرس أصناف نباتية ملائمة للمناخ السهبي',
+    typePaint: 'طلاء الأرصفة وتجميل الفضاءات العامة',
+    typeWadi: 'تنقية وتطهير مجاري الأودية ومنافذ تصريف الأمطار',
+    labelCampDate: 'موعد وساعة الانطلاق *',
+    labelCampMeeting: 'مكان التجمع الميداني المحدد *',
+    phCampMeeting: 'مثال: ساحة مسجد السلام - الساعة 08:00 صباحاً',
+    labelCampTools: 'العتاد والمعدات المطلوبة (مفصولة بفواصل)',
+    phCampTools: 'قفازات سميكة، أكياس سعة 100 لتر، مجارف، مياه صالحة للشرب...',
+    labelCampOrg: 'الجهة المبادرة أو الجمعية المنظمة',
+    phCampOrg: 'مثال: الكشافة الإسلامية الجزائرية (فوج الفلاح) بالتنسيق مع لجنة الحي',
+    btnSubmitCampaign: 'اعتماد ونشر المبادرة للعموم',
+    
+    // Before & After Section
+    impactTitle: 'سجل التحول والارتقاء البيئي (قبل / بعد)',
+    impactSubtitle: 'توثيق ميداني مصور للفضاءات المسترجعة بفضل تظافر جهود المتطوعين والمؤسسات العمومية',
+    slideHint: 'حرك المؤشر للمقارنة البصرية الدقيقة بين الوضع السابق والراهن',
+    badgeResolved: 'موقع مسترجع ومؤهل بالكامل',
+    cleanedBy: 'أُنجز التدخل بمساهمة:',
+    
+    // Partners & Institutional Support
+    partnersTitle: 'التنسيق المؤسساتي والوقاية العامة',
+    partnersSubtitle: 'تكامل العمل التطوعي للمجتمع المدني مع المخططات البلدية والولائية للنظافة وحماية البيئة',
+    partnerApcTitle: 'المجلس الشعبي البلدي لبلدية البيض',
+    partnerApcDesc: 'تسخير شاحنات النقل والعتاد الثقيل نحو مركز الردم التقني للنفايات (CET)، وتوفير حاويات جمع القمامة.',
+    partnerForestTitle: 'محافظة الغابات لولاية البيض',
+    partnerForestDesc: 'توفير الشتلات المتأقلمة مع المناخ القاري (الصنوبر الحلبي، البطم الأطلسي) والتأطير التقني لعمليات التشجير ومكافحة التصحر.',
+    partnerCivilTitle: 'مديرية الحماية المدنية لولاية البيض',
+    partnerCivilDesc: 'تأمين سلامة المتطوعين والإشراف على تنقية مجاري الأودية ونقاط تجمع المياه تفادياً لمخاطر الفيضانات الموسمية.',
+    partnerSecurityTitle: 'مصالح الأمن والدرك الوطنيين والصحة العمومية',
+    partnerSecurityDesc: 'تنظيم الحملات التحسيسية للوقاية من الآفات الاجتماعية، السلامة المرورية، وحماية الصحة العامة.',
+    
+    // Tips & Awareness Cards
+    tipsTitle: 'دليل السلامة الميدانية وحسن التدبير البيئي',
+    tip1Title: 'قواعد السلامة والوقاية الشخصية',
+    tip1Desc: 'إلزامية ارتداء قفازات عمل واقية وأحذية صلبة، وتفادي التقاط النفايات الحادة أو الزجاجية باليدين المجردتين.',
+    tip2Title: 'الفرز الانتقائي للمخلفات',
+    tip2Desc: 'عزل المواد البلاستيكية والكرتون في أكياس مخصصة لتسهيل عمليات الفرز وتوجيهها نحو مسالك الاسترجاع والرسكلة.',
+    tip3Title: 'المعايير التقنية للغرس في الوسط السهبي',
+    tip3Desc: 'اعتماد الأصناف المقاومة للجفاف والبرودة القارصة، مع تهيئة أحواض سقي مقعرة لتجميع مياه السيلان الطبيعي.',
+    
+    // Feedback / Toasts
+    toastReportSuccess: 'تم تسجيل البلاغ بنجاح وإدراجه ضمن الخارطة التفاعلية.',
+    toastUpvoteSuccess: 'شكراً لتأكيدك! تم إضافة صوتك لرفع أولوية معالجة هذا الموقع.',
+    toastJoinSuccess: 'تم تأكيد تسجيل مشاركتكم في هذه المبادرة التطوعية.',
+    toastCampaignSuccess: 'تم نشر وتعميم المبادرة التطوعية بنجاح.',
+    
+    // Footer
+    footerText: 'منصة بيّضها - أداة رقمية تشاركية لخدمة الصالح العام والارتقاء بالمحيط العمراني والبيئي لبلدية البيض.',
+    footerCredits: 'تطوير: مبادرة تكنولوجية مستقلة لدعم جهود التنمية المستدامة والمجتمع المدني'
+  },
+  
+  fr: {
+    dir: 'ltr',
+    appName: 'Bayedha',
+    appTagline: 'Plateforme citoyenne de salubrité publique et valorisation environnementale - El Bayadh',
+    navMap: 'Cartographie & Signalement',
+    navCampaigns: 'Actions Citoyennes',
+    navImpact: 'Registre des Réalisations',
+    navPartners: 'Coordination & Prévention',
+    navReportBtn: 'Déposer un signalement',
+    
+    // Header & Quick Stats
+    statsCleaned: 'Sites réhabilités',
+    statsVolunteers: 'Bénévoles mobilisés',
+    statsTrees: 'Arbustes plantés',
+    statsCampaigns: 'Actions achevées',
+    
+    // Map Controls & Filters
+    filterAll: 'Tous les sites',
+    filterBlackspots: 'Points noirs recensés',
+    filterCampaigns: 'Actions programmées',
+    filterResolved: 'Espaces réhabilités',
+    myLocation: 'Me géolocaliser',
+    mapLegend: 'Registre cartographique urbain',
+    legendBlackspot: 'Point noir nécessitant une résorption',
+    legendCampaign: 'Opération de volontariat planifiée',
+    legendResolved: 'Site assaini et réhabilité',
+    viewToggleMap: 'Vue Carte',
+    viewToggleList: 'Vue Liste',
+    
+    // Proximity & Duplicate Prevention
+    proximityAlertTitle: 'Attention : Signalement existant à proximité',
+    proximityAlertDesc: 'Un point noir est déjà enregistré à {dist} mètres de votre position. Pour éviter les doublons, vous pouvez appuyer ce signalement existant afin d\'en accroître la priorité.',
+    btnConfirmExisting: 'Appuyer et confirmer ce signalement (+1 vote)',
+    btnConfirmedAlready: 'Vous avez déjà appuyé ce signalement ✓',
+    btnProceedAnyway: 'Créer un signalement distinct malgré tout',
+    upvotesCount: 'citoyens ont appuyé ce signalement',
+    btnUpvoteSpot: 'Confirmer ce point noir',
+    
+    // Structured Report Modal
+    reportTitle: 'Déposer un signalement de dégradation ou point noir',
+    reportSubtitle: 'Participez à la cartographie des décharges sauvages et à la qualification du matériel d\'intervention requis',
+    
+    labelPhotoLoc: '1. Constat photographique et géolocalisation',
+    photoHint: 'Cliquez pour capturer ou importer un cliché',
+    locDetected: 'Position automatique enregistrée',
+    locNotDetected: 'Cliquez pour enregistrer les coordonnées',
+    btnAutoGPS: 'Géolocalisation automatique',
+    btnPickOnMap: 'Pointer sur la carte',
+    
+    labelNeighbourhood: '2. Quartier / Secteur urbain (Saisie manuelle) *',
+    phNeighbourhood: 'Nom du quartier ou repère (Ex: Cité El Moussalaha, Oued El Fahm, Cité Essalam...)',
+    
+    labelVolume: '3. Volume estimé et moyens logistiques requis *',
+    volLightTitle: 'Volume limité (Intervention manuelle)',
+    volLightDesc: 'Action bénévole avec sacs et gants via une opération citoyenne simple.',
+    volMediumTitle: 'Volume moyen (Camion benne 3.5T)',
+    volMediumDesc: 'Nécessite l\'appui d\'un camion communal pour l\'évacuation des sacs.',
+    volHeavyTitle: 'Volume majeur (Engins lourds et rétrochargeur)',
+    volHeavyDesc: 'Exige un rétrochargeur et des bennes de grand gabarit pour les déblais massifs.',
+    
+    labelMaterials: '4. Typologie dominante des déchets (Sélectionnez)',
+    matPlastic: 'Sacs et résidus plastiques',
+    matRubble: 'Gravats et déblais de chantiers',
+    matOrganic: 'Déchets ménagers organiques',
+    matTires: 'Pneumatiques usagés',
+    matMetal: 'Ferraille et objets métalliques',
+    matGreen: 'Déchets verts et branchages',
+    
+    labelAccess: '5. Accessibilité pour les engins et bennes',
+    accessPaved: 'Voie carrossable accessible aux poids lourds',
+    accessNarrow: 'Voie étroite ou terrain accidenté (Accès piétonnier seul)',
+    
+    labelNotes: '6. Précisions complémentaires (Optionnel)',
+    phNotes: 'Toute observation utile aux équipes de terrain...',
+    
+    btnSubmitReport: 'Valider et transmettre le signalement',
+    
+    // Campaign Card & Hub
+    campaignsTitle: 'Opérations de Volontariat et "Touiza" Programmées',
+    campaignsSubtitle: 'Mobilisation coordonnée des forces vives associatives et citoyennes en synergie avec les services publics',
+    btnNewCampaign: 'Programmer une nouvelle opération',
+    btnJoinCampaign: 'Confirmer mon engagement',
+    btnJoined: 'Participation confirmée',
+    campaignDate: 'Date et horaires d\'intervention',
+    campaignLocation: 'Point de rassemblement',
+    campaignOrganizer: 'Organisateur / Structure porteuse',
+    campaignTarget: 'Objectifs opérationnels fixés',
+    campaignToolsNeeded: 'Moyens logistiques et outillage requis',
+    campaignVolunteers: 'Bénévoles inscrits',
+    
+    // New Campaign Modal
+    newCampaignTitle: 'Planifier une opération d\'intérêt général',
+    newCampaignSubtitle: 'Encadrer une campagne d\'assainissement ou de reboisement en liaison avec les comités de quartier',
+    labelCampTitle: 'Intitulé de l\'opération *',
+    phCampTitle: 'Ex: Curage préventif d\'Oued El Fahm et reboisement des berges',
+    labelCampType: 'Nature de l\'intervention',
+    typeClean: 'Assainissement, collecte et évacuation des déchets',
+    typeTree: 'Reboisement avec des espèces adaptées au milieu steppique',
+    typePaint: 'Rénovation des bordures de trottoirs et fresques',
+    typeWadi: 'Curage préventif des lits d\'oueds et exutoires pluviaux',
+    labelCampDate: 'Date et heure de lancement *',
+    labelCampMeeting: 'Point de ralliement exact *',
+    phCampMeeting: 'Ex: Placette de la mosquée Essalam - 08h00',
+    labelCampTools: 'Matériel nécessaire (séparé par des virgules)',
+    phCampTools: 'Gants de protection, sacs 100L, pelles, eau potable...',
+    labelCampOrg: 'Collectif ou Association promotrice',
+    phCampOrg: 'Ex: Scouts SMA (Groupe El Fellah) en coordination avec le comité de quartier',
+    btnSubmitCampaign: 'Publier et diffuser l\'opération',
+    
+    // Before & After Section
+    impactTitle: 'Registre des Réalisations et Réhabilitations (Avant / Après)',
+    impactSubtitle: 'Traçabilité visuelle des sites assainis grâce à la synergie citoyenne et institutionnelle',
+    slideHint: 'Faites coulisser le curseur pour apprécier l\'ampleur de la réhabilitation',
+    badgeResolved: 'Site intégralement assaini et réhabilité',
+    cleanedBy: 'Intervention menée sous la conduite de :',
+    
+    // Partners & Institutional Support
+    partnersTitle: 'Coordination Institutionnelle & Prévention',
+    partnersSubtitle: 'Complémentarité entre l\'engagement citoyen et les schémas directeurs communaux de salubrité',
+    partnerApcTitle: 'Assemblée Populaire Communale (APC d\'El Bayadh)',
+    partnerApcDesc: 'Acheminement des bennes de collecte vers le Centre d\'Enfouissement Technique (CET) et mise à disposition de moyens mécanisés.',
+    partnerForestTitle: 'Conservation des Forêts de la Wilaya d\'El Bayadh',
+    partnerForestDesc: 'Fourniture d\'essences forestières résilientes (Pin d\'Alep, Pistachier de l\'Atlas) et encadrement technique sylvicole.',
+    partnerCivilTitle: 'Direction de la Protection Civile de la Wilaya',
+    partnerCivilDesc: 'Sécurisation des intervenants et supervision des travaux de curage des lits d\'oueds pour prévenir les crues saisonnières.',
+    partnerSecurityTitle: 'Services de la Sûreté, Gendarmerie et Santé Publique',
+    partnerSecurityDesc: 'Animation d\'ateliers de sensibilisation contre les fléaux sociaux, sécurité routière et hygiène publique.',
+    
+    // Tips & Awareness Cards
+    tipsTitle: 'Sécurité Opérationnelle & Bonnes Pratiques',
+    tip1Title: 'Sécurité individuelle et équipements',
+    tip1Desc: 'Port rigoureux de gants de manutention et de chaussures de sécurité. Interdiction formelle de manipuler le verre brisé à mains nues.',
+    tip2Title: 'Tri sélectif à la source',
+    tip2Desc: 'Isolement des fractions recyclables (plastiques rigides, cartons) dans des sacs dédiés pour faciliter leur valorisation industrielle.',
+    tip3Title: 'Prescriptions de plantation en zone steppique',
+    tip3Desc: 'Sélection rigoureuse des taxons résistants au gel et à la sécheresse, avec aménagement de cuvettes de rétention des eaux d\'impluvium.',
+    
+    // Feedback / Toasts
+    toastReportSuccess: 'Le signalement a été enregistré avec succès et intégré au registre cartographique.',
+    toastUpvoteSuccess: 'Merci pour votre confirmation ! Votre appui a été pris en compte pour rehausser la priorité.',
+    toastJoinSuccess: 'Votre engagement pour cette opération a été validé.',
+    toastCampaignSuccess: 'L\'opération a été publiée et ouverte à la mobilisation.',
+    
+    // Footer
+    footerText: 'Plateforme Bayedha - Dispositif numérique d\'intérêt général au service du cadre de vie d\'El Bayadh.',
+    footerCredits: 'Développé pour l\'engagement citoyen et la transition écologique en Algérie'
+  }
+};
+
+window.i18n = i18n;

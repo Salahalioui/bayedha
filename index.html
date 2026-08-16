@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#12241e">
+  <title>بيّضها | Bayedha - المنصة الرقمية للعمل التطوعي والنظافة الحضرية - بلدية البيض</title>
+  <meta name="description" content="منصة تطوعية لرصد النقاط السوداء وتأطير حملات النظافة والتشجير في مدينة البيض بالتعاون مع المجتمع المحلي والسلطات.">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/main.css">
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%22100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-wrapper">
+        <div class="brand-logo-mark" aria-label="شعار بيّضها">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 10a6 6 0 0 0-6-6H3v3a6 6 0 0 0 6 6h3"/><path d="M12 14a6 6 0 0 1 6-6h3v3a6 6 0 0 1-6 6h-3"/><path d="M12 2v20"/></svg>
+        </div>
+        <div class="brand-info">
+          <h1 data-i18n="appName">بيّضها</h1>
+          <p data-i18n="appTagline">المنصة الرقمية للعمل التطوعي والارتقاء بالبيئة الحضرية - بلدية البيض</p>
+        </div>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="desktop-nav" aria-label="القائمة الرئيسية">
+        <button class="nav-link active" data-tab="map">
+          <svg class="icon" viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+          <span data-i18n="navMap">الخارطة التفاعلية والرصد</span>
+        </button>
+        <button class="nav-link" data-tab="campaigns">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span data-i18n="navCampaigns">المبادرات التطوعية</span>
+        </button>
+        <button class="nav-link" data-tab="impact">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <span data-i18n="navImpact">سجل الإنجازات البيئية</span>
+        </button>
+        <button class="nav-link" data-tab="partners">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 10h6"/><path d="M9 14h6"/><path d="M9 18h6"/></svg>
+          <span data-i18n="navPartners">التنسيق المؤسساتي والوقاية</span>
+        </button>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <!-- Language Switcher -->
+        <div class="lang-toggle" role="group" aria-label="اختيار اللغة">
+          <button class="lang-btn active" data-lang="ar">عربي</button>
+          <button class="lang-btn" data-lang="fr">Français</button>
+        </div>
+
+        <!-- Primary CTA -->
+        <button class="btn btn-primary btn-open-report">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <span data-i18n="navReportBtn">تسجيل بلاغ عن نقطة سوداء</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Impact Counter Ribbon -->
+  <section class="stats-banner">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-icon">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-number" id="statCleaned">14</span>
+          <span class="stat-label" data-i18n="statsCleaned">موقع تمت معالجته</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-number" id="statVolunteers">185</span>
+          <span class="stat-label" data-i18n="statsVolunteers">متطوع مسجل</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 10a6 6 0 0 0-6-6H3v3a6 6 0 0 0 6 6h3"/><path d="M12 14a6 6 0 0 1 6-6h3v3a6 6 0 0 1-6 6h-3"/><path d="M12 2v20"/></svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-number" id="statTrees">320</span>
+          <span class="stat-label" data-i18n="statsTrees">شجيرة مغروسة</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-number" id="statCampaigns">9</span>
+          <span class="stat-label" data-i18n="statsCampaigns">مبادرة منجزة</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main View Container -->
+  <main class="main-content">
+    
+    <!-- TAB 1: Map & Radar -->
+    <section id="tab-map" class="tab-pane active">
+      
+      <!-- Mobile Switcher (Map / List) -->
+      <div class="mobile-view-switcher" role="tablist">
+        <button class="view-switcher-btn active" id="btnShowMapMobile" data-view="map">
+          <svg class="icon" viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+          <span data-i18n="viewToggleMap">عرض الخارطة</span>
+        </button>
+        <button class="view-switcher-btn" id="btnShowListMobile" data-view="list">
+          <svg class="icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <span data-i18n="viewToggleList">عرض القائمة</span>
+        </button>
+      </div>
+
+      <div class="map-view-container">
+        <!-- Interactive Map Wrapper -->
+        <div class="map-wrapper" id="mapWrapperBlock">
+          <div class="map-floating-controls">
+            <div class="map-filters" role="group" aria-label="تصفية الخارطة">
+              <button class="filter-btn active" data-filter="all" data-i18n="filterAll">كافة المواقع</button>
+              <button class="filter-btn" data-filter="blackspot" data-i18n="filterBlackspots">نقاط سوداء مرصودة</button>
+              <button class="filter-btn" data-filter="campaign" data-i18n="filterCampaigns">مبادرات مبرمجة</button>
+              <button class="filter-btn" data-filter="resolved" data-i18n="filterResolved">فضاءات مؤهلة</button>
+            </div>
+            
+            <button class="map-geo-btn" id="btnLocateUser" title="تحديد موقعي الجغرافي" aria-label="تحديد موقعي الجغرافي">
+              <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+            </button>
+          </div>
+
+          <div id="leafletMap"></div>
+        </div>
+
+        <!-- Sidebar List -->
+        <aside class="map-sidebar" id="mapSidebarBlock">
+          <div class="sidebar-header">
+            <h3 class="sidebar-title" data-i18n="mapLegend">دليل ورصد الأحياء الحضرية</h3>
+            <button class="btn btn-sm btn-outline btn-open-report">
+              <span data-i18n="navReportBtn">+ تسجيل بلاغ</span>
+            </button>
+          </div>
+          
+          <div class="spots-scroll-list" id="spotsListContainer">
+            <!-- Dynamic items populated by js -->
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- TAB 2: Campaigns & Touiza Hub -->
+    <section id="tab-campaigns" class="tab-pane">
+      <div class="section-intro">
+        <div>
+          <h2 data-i18n="campaignsTitle">المبادرات التطوعية وحملات "التويزة" المبرمجة</h2>
+          <p data-i18n="campaignsSubtitle">تنظيم وتوحيد الجهود الميدانية لجمعيات المجتمع المدني والمواطنين بالتنسيق مع المصالح العمومية</p>
+        </div>
+        <button class="btn btn-primary" id="btnOpenNewCampaign">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
+          <span data-i18n="btnNewCampaign">إدراج مبادرة تطوعية جديدة</span>
+        </button>
+      </div>
+
+      <div class="campaigns-grid" id="campaignsGrid">
+        <!-- Populated dynamically via JS -->
+      </div>
+    </section>
+
+    <!-- TAB 3: Before & After Wall of Impact -->
+    <section id="tab-impact" class="tab-pane">
+      <div class="section-intro">
+        <div>
+          <h2 data-i18n="impactTitle">سجل التحول والارتقاء البيئي (قبل / بعد)</h2>
+          <p data-i18n="impactSubtitle">توثيق ميداني مصور للفضاءات المسترجعة بفضل تظافر جهود المتطوعين والمؤسسات العمومية</p>
+        </div>
+      </div>
+
+      <div class="impact-showcase-grid" id="impactGrid">
+        <!-- Populated dynamically with Before/After sliders -->
+      </div>
+    </section>
+
+    <!-- TAB 4: Institutional Partnership & Awareness -->
+    <section id="tab-partners" class="tab-pane">
+      <div class="section-intro">
+        <div>
+          <h2 data-i18n="partnersTitle">التنسيق المؤسساتي والوقاية العامة</h2>
+          <p data-i18n="partnersSubtitle">تكامل العمل التطوعي للمجتمع المدني مع المخططات البلدية والولائية للنظافة وحماية البيئة</p>
+        </div>
+      </div>
+
+      <!-- Institutional Partners Grid -->
+      <div class="partners-grid">
+        <div class="partner-card">
+          <div class="partner-card-header">
+            <div class="partner-icon-mark">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 10h6"/><path d="M9 14h6"/><path d="M9 18h6"/></svg>
+            </div>
+            <h3 data-i18n="partnerApcTitle">المجلس الشعبي البلدي لبلدية البيض</h3>
+          </div>
+          <p data-i18n="partnerApcDesc">تسخير شاحنات النقل والعتاد الثقيل نحو مركز الردم التقني للنفايات (CET)، وتوفير حاويات جمع القمامة.</p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-card-header">
+            <div class="partner-icon-mark">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 10a6 6 0 0 0-6-6H3v3a6 6 0 0 0 6 6h3"/><path d="M12 14a6 6 0 0 1 6-6h3v3a6 6 0 0 1-6 6h-3"/><path d="M12 2v20"/></svg>
+            </div>
+            <h3 data-i18n="partnerForestTitle">محافظة الغابات لولاية البيض</h3>
+          </div>
+          <p data-i18n="partnerForestDesc">توفير الشتلات المتأقلمة مع المناخ القاري (الصنوبر الحلبي، البطم الأطلسي) والتأطير التقني لعمليات التشجير ومكافحة التصحر.</p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-card-header">
+            <div class="partner-icon-mark">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3 data-i18n="partnerCivilTitle">مديرية الحماية المدنية لولاية البيض</h3>
+          </div>
+          <p data-i18n="partnerCivilDesc">تأمين سلامة المتطوعين والإشراف على تنقية مجاري الأودية ونقاط تجمع المياه تفادياً لمخاطر الفيضانات الموسمية.</p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-card-header">
+            <div class="partner-icon-mark">
+              <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+            </div>
+            <h3 data-i18n="partnerSecurityTitle">مصالح الأمن والدرك الوطنيين والصحة العمومية</h3>
+          </div>
+          <p data-i18n="partnerSecurityDesc">تنظيم الحملات التحسيسية للوقاية من الآفات الاجتماعية، السلامة المرورية، وحماية الصحة العامة.</p>
+        </div>
+      </div>
+
+      <!-- Awareness Guidelines -->
+      <div class="tips-container">
+        <h3 style="font-size: 16px; font-weight: 700;" data-i18n="tipsTitle">دليل السلامة الميدانية وحسن التدبير البيئي</h3>
+        <div class="tips-grid">
+          <div class="tip-box">
+            <h4 data-i18n="tip1Title">قواعد السلامة والوقاية الشخصية</h4>
+            <p data-i18n="tip1Desc">إلزامية ارتداء قفازات عمل واقية وأحذية صلبة، وتفادي التقاط النفايات الحادة أو الزجاجية باليدين المجردتين.</p>
+          </div>
+          <div class="tip-box">
+            <h4 data-i18n="tip2Title">الفرز الانتقائي للمخلفات</h4>
+            <p data-i18n="tip2Desc">عزل المواد البلاستيكية والكرتون في أكياس مخصصة لتسهيل عمليات الفرز وتوجيهها نحو مسالك الاسترجاع والرسكلة.</p>
+          </div>
+          <div class="tip-box">
+            <h4 data-i18n="tip3Title">المعايير التقنية للغرس في الوسط السهبي</h4>
+            <p data-i18n="tip3Desc">اعتماد الأصناف المقاومة للجفاف والبرودة القارصة، مع تهيئة أحواض سقي مقعرة لتجميع مياه السيلان الطبيعي.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-nav-bar" aria-label="شريط التنقل السفلي">
+    <div class="mobile-nav-items">
+      <button class="mobile-nav-btn active" data-tab="map">
+        <svg class="icon" viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+        <span data-i18n="navMap">الخارطة</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="campaigns">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        <span data-i18n="navCampaigns">المبادرات</span>
+      </button>
+      <button class="mobile-nav-btn btn-open-report" style="color: var(--color-pine-800);">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span data-i18n="navReportBtn">بلاغ</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="impact">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span data-i18n="navImpact">الإنجازات</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="partners">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/></svg>
+        <span data-i18n="navPartners">الوقاية</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========================================================= -->
+  <!-- MODAL: Structured Report Flow (نظام البلاغ المهيكل المنظم) -->
+  <!-- ========================================================= -->
+  <div class="modal-overlay" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="modalReportTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalReportTitle" data-i18n="reportTitle">تسجيل بلاغ عن نقطة سوداء أو تشوه بيئي</h3>
+        <button class="modal-close-btn" aria-label="إغلاق">&times;</button>
+      </div>
+      <form id="reportForm" class="modal-body">
+        
+        <!-- SECTION 1: Photo & GPS Coordinates -->
+        <div class="form-section">
+          <label class="section-label" data-i18n="labelPhotoLoc">1. المعاينة المصورة والإحداثيات الميدانية</label>
+          
+          <div class="photo-uploader-box-compact" id="photoUploaderBox">
+            <input type="file" id="reportPhotoInput" accept="image/*" style="display: none;">
+            <svg class="icon" viewBox="0 0 24 24" style="width: 22px; height: 22px; color: var(--color-pine-700);"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <span style="font-size: 12.5px; font-weight: 500;" id="photoPromptText" data-i18n="photoHint">انقر لالتقاط صورة أو استيرادها</span>
+            <img id="photoPreviewImg" class="photo-preview-img" alt="Preview" style="display: none; max-height: 120px; width: auto; margin: 0 auto;">
+          </div>
+
+          <div class="location-status-card">
+            <div class="location-status-text" id="locStatusText">
+              <svg class="icon" viewBox="0 0 24 24" style="color: var(--color-pine-700);"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+              <span id="locStatusLabel" data-i18n="locNotDetected">انقر لتحديد الإحداثيات</span>
+            </div>
+            <div style="display: flex; gap: 6px;">
+              <button type="button" class="btn btn-sm btn-outline" id="btnTriggerAutoGPS" title="GPS">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+                <span data-i18n="btnAutoGPS">تلقائي GPS</span>
+              </button>
+              <button type="button" class="btn btn-sm btn-outline" id="btnPickCoords">
+                <svg class="icon" viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/></svg>
+                <span data-i18n="btnPickOnMap">على الخارطة</span>
+              </button>
+            </div>
+          </div>
+          <!-- Hidden inputs for coordinates -->
+          <input type="hidden" id="reportLat" value="32.6990">
+          <input type="hidden" id="reportLng" value="1.0125">
+        </div>
+
+        <!-- DYNAMIC PROXIMITY DUPLICATE WARNING CARD -->
+        <div class="proximity-alert-box" id="proximityAlertBox">
+          <div class="proximity-header">
+            <svg class="icon" viewBox="0 0 24 24" style="color: var(--color-clay-600);"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span data-i18n="proximityAlertTitle">تنبيه: يوجد بلاغ قائم بالقرب من هذا الموقع</span>
+          </div>
+          <p class="proximity-body" id="proximityAlertMsg">
+            تم رصد نقطة سوداء مسبقاً في هذا النطاق. تفادياً لتكرار البيانات، يمكنك تأكيد البلاغ القائم لرفع درجة استعجاله.
+          </p>
+          <div class="proximity-actions">
+            <button type="button" class="btn btn-sm btn-accent w-100" id="btnConfirmExistingSpot">
+              <span data-i18n="btnConfirmExisting">تأكيد ودعم هذا البلاغ القائم (+1 تأكيد)</span> 👍
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Neighbourhood (Manual Input) -->
+        <div class="form-section">
+          <label class="section-label" for="reportNeighbourhood" data-i18n="labelNeighbourhood">2. الحي / التجمع السكاني (كتابة يدوية) *</label>
+          <input type="text" id="reportNeighbourhood" class="form-control" data-i18n-ph="phNeighbourhood" required placeholder="اكتب اسم الحي أو المعلم المجاور...">
+        </div>
+
+        <!-- SECTION 3: Estimated Volume & Equipment (Radio Cards) -->
+        <div class="form-section">
+          <label class="section-label" data-i18n="labelVolume">3. الحجم التقديري ونوع التدخل والعتاد المطلوب *</label>
+          <div class="radio-cards-grid" id="volumeCardsGroup">
+            
+            <!-- Light -->
+            <div class="radio-card selected" data-volume="light">
+              <div class="radio-indicator"></div>
+              <div class="radio-card-content">
+                <span class="radio-card-title">🟢 <span data-i18n="volLightTitle">حجم محدود (تدخل يدوي)</span></span>
+                <span class="radio-card-desc" data-i18n="volLightDesc">مجهود تطوعي بأكياس جمع وقفازات عبر حملة شبابية بسيطة.</span>
+              </div>
+            </div>
+
+            <!-- Medium -->
+            <div class="radio-card" data-volume="medium">
+              <div class="radio-indicator"></div>
+              <div class="radio-card-content">
+                <span class="radio-card-title">🟡 <span data-i18n="volMediumTitle">حجم متوسط (شاحنة نقل 3.5 طن)</span></span>
+                <span class="radio-card-desc" data-i18n="volMediumDesc">يستلزم مساندة شاحنة نقل تابعة للبلدية لرفع الأكياس والكتل.</span>
+              </div>
+            </div>
+
+            <!-- Heavy -->
+            <div class="radio-card" data-volume="heavy">
+              <div class="radio-indicator"></div>
+              <div class="radio-card-content">
+                <span class="radio-card-title">🔴 <span data-i18n="volHeavyTitle">حجم ضخم (آليات ثقيلة وجرافة)</span></span>
+                <span class="radio-card-desc" data-i18n="volHeavyDesc">يستوجب جرافة (Rétrochargeur) وشاحنات ذات حمولة كبرى لرفع الردم.</span>
+              </div>
+            </div>
+
+          </div>
+          <input type="hidden" id="reportVolume" value="light">
+        </div>
+
+        <!-- SECTION 4: Waste Materials (Multi-select Chips) -->
+        <div class="form-section">
+          <label class="section-label" data-i18n="labelMaterials">4. المكونات الغالبة على النفايات (اختر ما ينطبق)</label>
+          <div class="chips-group" id="materialsChipsGroup">
+            <button type="button" class="chip-btn selected" data-mat="plastic">
+              <span class="chip-check">✓</span> <span data-i18n="matPlastic">أكياس ومواد بلاستيكية</span>
+            </button>
+            <button type="button" class="chip-btn" data-mat="rubble">
+              <span class="chip-check">✓</span> <span data-i18n="matRubble">ردام وركام أشغال بناء</span>
+            </button>
+            <button type="button" class="chip-btn selected" data-mat="organic">
+              <span class="chip-check">✓</span> <span data-i18n="matOrganic">نفايات منزلية عضوية</span>
+            </button>
+            <button type="button" class="chip-btn" data-mat="tires">
+              <span class="chip-check">✓</span> <span data-i18n="matTires">إطارات وعجلات مطاطية</span>
+            </button>
+            <button type="button" class="chip-btn" data-mat="metal">
+              <span class="chip-check">✓</span> <span data-i18n="matMetal">خردة ومعادن صلبة</span>
+            </button>
+            <button type="button" class="chip-btn" data-mat="green">
+              <span class="chip-check">✓</span> <span data-i18n="matGreen">بقايا تقليم أشجار وأعشاب</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION 5: Vehicle Accessibility -->
+        <div class="form-section">
+          <label class="section-label" data-i18n="labelAccess">5. مسلك وصول الشاحنات والآليات</label>
+          <div class="access-pill-group" id="accessPillGroup">
+            <div class="access-pill selected" data-access="paved">
+              <svg class="icon" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              <span data-i18n="accessPaved">مسلك معبد ومتاح للشاحنات</span>
+            </div>
+            <div class="access-pill" data-access="narrow">
+              <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+              <span data-i18n="accessNarrow">مسلك ضيق / تضاريس وعرة</span>
+            </div>
+          </div>
+          <input type="hidden" id="reportAccess" value="paved">
+        </div>
+
+        <!-- SECTION 6: Optional Notes -->
+        <div class="form-section">
+          <label class="section-label" for="reportNotes" data-i18n="labelNotes">6. ملاحظات إضافية أو معلم مميز (اختياري)</label>
+          <input type="text" id="reportNotes" class="form-control" data-i18n-ph="phNotes" placeholder="أي توضيح يفيد فرق التدخل...">
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100" style="margin-top: 4px;">
+          <span data-i18n="btnSubmitReport">اعتماد وتسجيل البلاغ فوراً</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Program New Volunteer Campaign -->
+  <div class="modal-overlay" id="newCampaignModal" role="dialog" aria-modal="true" aria-labelledby="modalCampTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalCampTitle" data-i18n="newCampaignTitle">برمجة مبادرة تطوعية ميدانية</h3>
+        <button class="modal-close-btn" aria-label="إغلاق">&times;</button>
+      </div>
+      <form id="newCampaignForm" class="modal-body">
+        
+        <div class="form-group">
+          <label data-i18n="labelCampTitle">عنوان المبادرة التطوعية *</label>
+          <input type="text" id="campInputTitle" class="form-control" data-i18n-ph="phCampTitle" required>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="labelCampType">طبيعة النشاط التطوعي</label>
+          <select id="campInputType" class="form-control">
+            <option value="clean" data-i18n="typeClean">رفع النفايات وتنظيف المحيط العمراني</option>
+            <option value="tree" data-i18n="typeTree">تشجير وغرس أصناف نباتية ملائمة</option>
+            <option value="paint" data-i18n="typePaint">طلاء الأرصفة وتجميل الفضاءات العامة</option>
+            <option value="wadi" data-i18n="typeWadi">تنقية وتطهير مجاري الأودية</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="labelCampDate">موعد وساعة الانطلاق *</label>
+          <input type="text" id="campInputDate" class="form-control" placeholder="مثال: الجمعة 28 أوت 2026 - 08:00 صباحاً" required>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="labelCampMeeting">مكان التجمع الميداني المحدد *</label>
+          <input type="text" id="campInputMeeting" class="form-control" data-i18n-ph="phCampMeeting" required>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="labelCampOrg">الجهة المبادرة أو الجمعية المنظمة</label>
+          <input type="text" id="campInputOrg" class="form-control" data-i18n-ph="phCampOrg">
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="labelCampTools">العتاد والمعدات المطلوبة (مفصولة بفواصل)</label>
+          <input type="text" id="campInputTools" class="form-control" data-i18n-ph="phCampTools">
+        </div>
+
+        <button type="submit" class="btn btn-accent w-100" style="margin-top: 6px;">
+          <span data-i18n="btnSubmitCampaign">اعتماد ونشر المبادرة للعموم</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/translations.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
