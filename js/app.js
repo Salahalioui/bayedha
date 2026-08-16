@@ -1,4 +1,4 @@
-// app.js - Main Application Orchestrator (Proximity Duplicate Prevention & Upvoting)
+// app.js - Main Application Orchestrator with Single Coordinator Engine
 class BayedhaApp {
   constructor() {
     this.store = window.appStore;
@@ -6,7 +6,9 @@ class BayedhaApp {
     this.currentTab = 'map';
     this.mobileMapTabState = 'map';
     this.uploadedPhotoData = null;
+    this.coordAfterPhotoData = null;
     this.activeNearbySpot = null;
+    this.isCoordAuthenticated = false;
 
     this.init();
   }
@@ -23,6 +25,7 @@ class BayedhaApp {
 
     this.bindEvents();
     this.bindStructuredFormEvents();
+    this.bindCoordinatorEvents();
     this.initBeforeAfterSliders();
   }
 
@@ -55,6 +58,9 @@ class BayedhaApp {
     this.renderMapAndSidebar();
     this.renderCampaigns();
     this.renderBeforeAfter();
+    if (this.isCoordAuthenticated) {
+      this.renderCoordinatorDashboard();
+    }
   }
 
   renderStats() {
@@ -177,7 +183,7 @@ class BayedhaApp {
 
             <div class="camp-footer">
               <div class="volunteer-count-badge">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 <span>${camp.volunteersRegistered} ${t.campaignVolunteers}</span>
               </div>
               <button class="btn btn-sm ${joinBtnClass}" onclick="window.app.toggleJoinCampaign('${camp.id}')">
@@ -338,7 +344,7 @@ class BayedhaApp {
 
   // Real-time proximity checking whenever coordinates are picked
   checkProximity(lat, lng) {
-    const nearby = this.store.findNearbyActiveSpot(lat, lng, 85); // 85m threshold
+    const nearby = this.store.findNearbyActiveSpot(lat, lng, 85);
     const alertBox = document.getElementById('proximityAlertBox');
     const alertMsg = document.getElementById('proximityAlertMsg');
     const btnConfirm = document.getElementById('btnConfirmExistingSpot');
@@ -416,7 +422,6 @@ class BayedhaApp {
     if (modal) {
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
-      // Reset proximity on open
       const alertBox = document.getElementById('proximityAlertBox');
       if (alertBox) alertBox.classList.remove('active');
       this.activeNearbySpot = null;
@@ -447,6 +452,218 @@ class BayedhaApp {
       toast.style.opacity = '0';
       setTimeout(() => toast.remove(), 250);
     }, 3200);
+  }
+
+  // =========================================================
+  // SINGLE COORDINATOR PORTAL LOGIC & EVENT BINDINGS
+  // =========================================================
+  bindCoordinatorEvents() {
+    const btnOpenCoord = document.getElementById('btnOpenCoordinatorModal');
+    if (btnOpenCoord) {
+      btnOpenCoord.addEventListener('click', () => {
+        this.openModal('coordinatorModal');
+        if (!this.isCoordAuthenticated) {
+          document.getElementById('coordPinScreen').style.display = 'block';
+          document.getElementById('coordDashboardScreen').style.display = 'none';
+        } else {
+          document.getElementById('coordPinScreen').style.display = 'none';
+          document.getElementById('coordDashboardScreen').style.display = 'block';
+          this.renderCoordinatorDashboard();
+        }
+      });
+    }
+
+    // PIN check
+    const btnCheckPin = document.getElementById('btnCheckCoordPin');
+    const pinInput = document.getElementById('coordPinInput');
+    const verifyPin = () => {
+      const pin = pinInput.value.trim();
+      if (pin === '2026' || pin === '1234') {
+        this.isCoordAuthenticated = true;
+        document.getElementById('coordPinScreen').style.display = 'none';
+        document.getElementById('coordDashboardScreen').style.display = 'block';
+        this.renderCoordinatorDashboard();
+        this.showToast('مرحباً بك في بوابة المنسق الميداني لبلدية البيض.');
+      } else {
+        alert(this.store.getT().pinError);
+      }
+    };
+
+    if (btnCheckPin) btnCheckPin.addEventListener('click', verifyPin);
+    if (pinInput) {
+      pinInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') verifyPin();
+      });
+    }
+
+    // Sub-tab switcher
+    document.querySelectorAll('.coord-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.coord-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const targetTab = btn.dataset.coordTab;
+        document.querySelectorAll('.coord-pane').forEach(p => p.classList.remove('active'));
+        const pane = document.getElementById(`coordPane-${targetTab}`);
+        if (pane) pane.classList.add('active');
+
+        if (targetTab === 'report') {
+          this.updateMunicipalReportText();
+        }
+      });
+    });
+
+    // After-photo file uploader
+    const afterFileInput = document.getElementById('coordAfterPhotoInput');
+    const afterPhotoBox = document.getElementById('coordAfterPhotoBox');
+    const afterPhotoPreview = document.getElementById('coordAfterPhotoPreview');
+    const afterPhotoPrompt = document.getElementById('coordAfterPhotoPrompt');
+
+    if (afterPhotoBox && afterFileInput) {
+      afterPhotoBox.addEventListener('click', () => afterFileInput.click());
+      afterFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            this.coordAfterPhotoData = ev.target.result;
+            if (afterPhotoPreview) {
+              afterPhotoPreview.src = this.coordAfterPhotoData;
+              afterPhotoPreview.style.display = 'block';
+              if (afterPhotoPrompt) afterPhotoPrompt.style.display = 'none';
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    // Submit Resolution Form
+    const resolveForm = document.getElementById('coordResolveForm');
+    if (resolveForm) {
+      resolveForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const spotId = document.getElementById('resolveSpotSelect').value;
+        const cleanedBy = document.getElementById('resolveCleanedBy').value.trim();
+
+        if (!spotId) {
+          alert('يرجى اختيار النقطة المطلوب إغلاقها.');
+          return;
+        }
+
+        const success = this.store.resolveSpot(
+          spotId,
+          this.coordAfterPhotoData || 'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?w=800&auto=format&fit=crop&q=80',
+          cleanedBy
+        );
+
+        if (success) {
+          resolveForm.reset();
+          this.coordAfterPhotoData = null;
+          if (afterPhotoPreview) afterPhotoPreview.style.display = 'none';
+          if (afterPhotoPrompt) afterPhotoPrompt.style.display = 'inline';
+          this.closeModal('coordinatorModal');
+          this.switchTab('impact');
+          this.showToast(this.store.getT().toastSpotResolved);
+        }
+      });
+    }
+
+    // 1-Click Copy Municipal Report
+    const btnCopyReport = document.getElementById('btnCopyMunicipalReport');
+    if (btnCopyReport) {
+      btnCopyReport.addEventListener('click', () => {
+        const textarea = document.getElementById('municipalReportTextArea');
+        if (textarea) {
+          textarea.select();
+          navigator.clipboard.writeText(textarea.value).then(() => {
+            this.showToast(this.store.getT().toastReportCopied);
+          }).catch(() => {
+            document.execCommand('copy');
+            this.showToast(this.store.getT().toastReportCopied);
+          });
+        }
+      });
+    }
+  }
+
+  renderCoordinatorDashboard() {
+    const t = this.store.getT();
+    const activeBlackspots = this.store.spots.filter(s => s.status === 'blackspot');
+
+    // Render Triage List
+    const triageContainer = document.getElementById('coordSpotsList');
+    if (triageContainer) {
+      if (activeBlackspots.length === 0) {
+        triageContainer.innerHTML = `
+          <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px;">
+            ${t.coordNoSpots}
+          </div>
+        `;
+      } else {
+        triageContainer.innerHTML = activeBlackspots.map(spot => {
+          const title = this.store.getI18nText(spot.title);
+          const neighbourhood = this.store.getI18nText(spot.neighbourhood);
+          const upvotes = spot.upvotes || 1;
+
+          return `
+            <div class="coord-spot-item">
+              <div class="coord-spot-item-header">
+                <strong>📍 ${neighbourhood}</strong>
+                <span class="spot-vote-badge">👍 ${upvotes} ${t.upvotesCount}</span>
+              </div>
+              <p style="font-size: 12.5px; color: var(--text-secondary); margin: 2px 0;">${title}</p>
+              <div class="coord-spot-actions">
+                <button class="btn btn-sm btn-primary" onclick="window.app.triggerCoordResolveModal('${spot.id}')">
+                  ✓ ${t.btnResolveSpotTrigger}
+                </button>
+                <button class="btn btn-sm btn-outline" onclick="window.app.openCreateCampaignFromSpot('${spot.id}')">
+                  📅 برمجة حملة
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="window.app.coordinatorDeleteSpot('${spot.id}')">
+                  🗑️ ${t.btnDeleteSpot}
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // Populate Resolve Select Dropdown
+    const selectEl = document.getElementById('resolveSpotSelect');
+    if (selectEl) {
+      selectEl.innerHTML = activeBlackspots.map(spot => {
+        const title = this.store.getI18nText(spot.title);
+        const neighbourhood = this.store.getI18nText(spot.neighbourhood);
+        return `<option value="${spot.id}">${neighbourhood} - ${title.substring(0, 50)}...</option>`;
+      }).join('');
+    }
+
+    this.updateMunicipalReportText();
+  }
+
+  triggerCoordResolveModal(spotId) {
+    const paneResolveBtn = document.querySelector('[data-coord-tab="resolve"]');
+    if (paneResolveBtn) paneResolveBtn.click();
+
+    const selectEl = document.getElementById('resolveSpotSelect');
+    if (selectEl) selectEl.value = spotId;
+  }
+
+  coordinatorDeleteSpot(spotId) {
+    if (confirm(this.store.lang === 'ar' ? 'هل أنت متأكد من حذف هذا البلاغ؟' : 'Confirmer la suppression de ce signalement ?')) {
+      this.store.deleteSpot(spotId);
+      this.renderCoordinatorDashboard();
+      this.showToast(this.store.getT().toastSpotDeleted);
+    }
+  }
+
+  updateMunicipalReportText() {
+    const textarea = document.getElementById('municipalReportTextArea');
+    if (textarea) {
+      textarea.value = this.store.generateMunicipalReport();
+    }
   }
 
   // Structured Reporting Form Bindings
