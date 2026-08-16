@@ -418,8 +418,8 @@ class AppStore {
       volume: spotData.volume || 'light',
       materials: spotData.materials || ['plastic'],
       accessibility: spotData.accessibility || 'paved',
-      lat: parseFloat(spotData.lat) || 32.6990,
-      lng: parseFloat(spotData.lng) || 1.0125,
+      lat: parseFloat(spotData.lat) || 33.6835,
+      lng: parseFloat(spotData.lng) || 1.0163,
       reportedAt: new Date().toISOString().split('T')[0],
       reportedBy: {
         ar: 'مواطن (تطبيق بيّضها)',
@@ -564,8 +564,8 @@ class AppStore {
             tools_needed_fr: newCamp.toolsNeeded.fr,
             volunteers_registered: 1,
             banner_url: newCamp.banner,
-            latitude: parseFloat(campData.lat) || 32.6990,
-            longitude: parseFloat(campData.lng) || 1.0125
+            latitude: parseFloat(campData.lat) || 33.6835,
+            longitude: parseFloat(campData.lng) || 1.0163
           })
           .select();
 
