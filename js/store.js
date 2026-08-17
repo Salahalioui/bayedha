@@ -151,6 +151,8 @@ class AppStore {
       },
       volunteersRegistered: c.volunteers_registered || 1,
       banner: c.banner_url || 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&auto=format&fit=crop&q=80',
+      lat: parseFloat(c.latitude) || 33.6835,
+      lng: parseFloat(c.longitude) || 1.0163,
       isUserJoined: this.userActions.joinedCampaigns.includes(c.id)
     };
   }
@@ -248,9 +250,35 @@ class AppStore {
     this.notify();
   }
 
+  getAllSpots() {
+    const spots = [...this.spots];
+    // Synthesize all campaigns into map spots if not already explicitly mapped
+    this.campaigns.forEach(camp => {
+      const alreadyInSpots = spots.some(s => s.campaignId === camp.id || s.id === camp.id || s.id === 'camp-spot-' + camp.id);
+      if (!alreadyInSpots) {
+        spots.push({
+          id: 'camp-spot-' + camp.id,
+          status: 'campaign',
+          category: camp.type === 'tree' ? 'green' : 'waste',
+          title: camp.title,
+          neighbourhood: camp.meetingPoint,
+          description: camp.target || camp.meetingPoint,
+          lat: parseFloat(camp.lat) || 33.6835,
+          lng: parseFloat(camp.lng) || 1.0163,
+          campaignId: camp.id,
+          photo: camp.banner || 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&auto=format&fit=crop&q=80',
+          reportedAt: camp.date,
+          upvotes: camp.volunteersRegistered || 1
+        });
+      }
+    });
+    return spots;
+  }
+
   getFilteredSpots() {
-    if (this.activeFilter === 'all') return this.spots;
-    return this.spots.filter(s => s.status === this.activeFilter);
+    const allSpots = this.getAllSpots();
+    if (this.activeFilter === 'all') return allSpots;
+    return allSpots.filter(s => s.status === this.activeFilter);
   }
 
   getStats() {
