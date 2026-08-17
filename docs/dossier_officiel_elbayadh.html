@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>الملف التقني والتنفيذي لمشروع منصة «بيّضها» - ولاية البيض</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Readex+Pro:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+      --primary: #12241e;
+      --accent: #2e7d32;
+      --clay: #c86d44;
+      --gold: #b45309;
+      --bg-light: #f8faf9;
+      --text: #1a202c;
+      --text-muted: #4a5568;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    body {
+      font-family: 'Readex Pro', 'Amiri', 'Traditional Arabic', Tahoma, sans-serif;
+      background: #f1f5f9;
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 18mm 20mm;
+      margin: 15px auto;
+      background: white;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      position: relative;
+      page-break-after: always;
+    }
+
+    @media print {
+      body { background: white; }
+      .page { margin: 0; box-shadow: none; width: 100%; min-height: 100vh; padding: 15mm 18mm; }
+      @page { size: A4; margin: 0; }
+    }
+
+    /* Official Letterhead Header */
+    .official-header {
+      text-align: center;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+
+    .official-rep {
+      font-family: 'Amiri', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .official-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .bismillah {
+      font-family: 'Amiri', serif;
+      font-size: 18px;
+      color: var(--gold);
+      margin: 6px 0;
+    }
+
+    .header-dest-box {
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      border-right: 4px solid var(--accent);
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin: 12px 0 16px 0;
+      text-align: right;
+    }
+
+    .header-dest-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .header-dest-list {
+      font-size: 11.5px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .dossier-title-banner {
+      background: linear-gradient(135deg, #12241e, #1b382f);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 6px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .dossier-title-banner h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .dossier-title-banner p {
+      font-size: 12px;
+      color: #a7f3d0;
+      font-weight: 400;
+    }
+
+    /* Section Styles */
+    .section-block {
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      border-bottom: 1.5px solid #cbd5e1;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      background: var(--accent);
+      color: white;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+
+    p.body-text {
+      text-align: justify;
+      color: #2d3748;
+      font-size: 12px;
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+
+    /* Grid & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 10px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    .info-card {
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+
+    .info-card.highlight {
+      border-top: 3px solid var(--accent);
+    }
+
+    .info-card.clay {
+      border-top: 3px solid var(--clay);
+    }
+
+    .info-card h4 {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .info-card p {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Key Metrics Table */
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: 11.5px;
+    }
+
+    table.data-table th, table.data-table td {
+      border: 1px solid var(--border);
+      padding: 7px 10px;
+      text-align: right;
+    }
+
+    table.data-table th {
+      background: #1e3a30;
+      color: white;
+      font-weight: 600;
+      font-size: 11.5px;
+    }
+
+    table.data-table tr:nth-child(even) {
+      background: var(--bg-light);
+    }
+
+    /* Feature Pillars */
+    .pillar-box {
+      border-right: 3px solid var(--accent);
+      padding-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    .pillar-box h4 {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .pillar-box p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Signature & Stamp Area */
+    .sign-area {
+      margin-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-top: 15px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .sign-box {
+      text-align: center;
+      width: 220px;
+      font-size: 12px;
+    }
+
+    .page-num {
+      position: absolute;
+      bottom: 12mm;
+      left: 20mm;
+      right: 20mm;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #94a3b8;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= PAGE 1: EXECUTIVE BRIEF & DIAGNOSIS ================= -->
+  <div class="page">
+    <div class="official-header">
+      <div class="official-rep">الجمهورية الجزائرية الديمقراطية الشعبية</div>
+      <div class="official-sub">ولاية البيض | بلدية البيض | المجتمع المدني والمبادرات الرقمية المستدامة</div>
+      <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+    </div>
+
+    <div class="header-dest-box">
+      <div class="header-dest-title">موجّه بعناية واهتمام إلى السادة المحترمين:</div>
+      <div class="header-dest-list">
+        • <strong>السيد والي ولاية البيض</strong> (المحترم)<br>
+        • <strong>السيد رئيس المجلس الشعبي البلدي لبلدية البيض</strong> (المحترم)<br>
+        • <strong>السيد مدير البيئة لولاية البيض</strong> | <strong>السيد محافظ الغابات</strong> | <strong>السيد مدير الشؤون الدينية والأوقاف</strong> | <strong>السيد مدير الحماية المدنية</strong>
+      </div>
+    </div>
+
+    <div class="dossier-title-banner">
+      <h1>مـشـروع مـنـصـة «بـيّـضـهـا» (Bayedha)</h1>
+      <p>المنظومة الرقمية التشاركية الذكية لرصد النقاط السوداء، حوكمة النظافة الحضرية، وتأطير مبادرات التويزة والتشجير</p>
+    </div>
+
+    <!-- 1. التوطئة والأهداف الاستراتيجية -->
+    <div class="section-block">
+      <div class="section-title">
+        <span class="section-title-icon">١</span>
+        <span>توطئة وتماشي مع السياسة العامة للدولة</span>
+      </div>
+      <p class="body-text">
+        استجابةً للتوجهات السامية للسلطات العليا للبلاد الرامية إلى <strong>تعميم الرقمنة الشاملة</strong>، وعصرنة تسيير المرفق العام المحلي، وإشراك المجتمع المدني كفاعل محوري في التنمية المستدامة وحماية الإطار المعيشي؛ يشرفنا أن نضع بين أيديكم هذا الملف التعريفي بمشروع <strong>منصة «بيّضها» (Bayedha)</strong> كأول منظومة رقمية جوارية متكاملة ومصممة خصيصاً لخصوصية النسيج الحضري والبيئي لبلدية وولاية البيض.
+      </p>
+    </div>
+
+    <!-- 2. بطاقة الهوية الفنية للمشروع -->
+    <div class="section-block">
+      <div class="section-title">
+        <span class="section-title-icon">٢</span>
+        <span>البطاقة الفنية والتكنولوجية للمشروع (Project Factsheet)</span>
+      </div>
+      <table class="data-table">
+        <tr>
+          <th style="width: 28%;">المحور</th>
+          <th>البيان والمواصفات الفنية</th>
+        </tr>
+        <tr>
+          <td><strong>اسم المنصة</strong></td>
+          <td><strong>بيّضها (Bayedha)</strong> — مشتقة من اسم المدينة العريقة وقيمة النقاء الحضري.</td>
+        </tr>
+        <tr>
+          <td><strong>الطبيعة البرمجية</strong></td>
+          <td>تطبيق ويب تقدمي (PWA) يعمل على كافة الهواتف والحواسيب دون تنزيل، ويدعم العمل دون إنترنت (Offline).</td>
+        </tr>
+        <tr>
+          <td><strong>البنية السحابية</strong></td>
+          <td>قاعدة بيانات سحابية لحظية (PostgreSQL + PostGIS) مع مزامنة فورية متعددة الأجهزة (Real-Time).</td>
+        </tr>
+        <tr>
+          <td><strong>التكلفة على الخزينة</strong></td>
+          <td><strong>0.00 دج (مجانية تماماً)</strong> — تعتمد هندسة استضافة سحابية اقتصادية وضاغط صور محلي ذكي.</td>
+        </tr>
+        <tr>
+          <td><strong>النطاق الجغرافي</strong></td>
+          <td>بلدية البيض (قابلة للتعميم التلقائي على كافة بلديات ودوائر ولاية البيض).</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- 3. تشخيص الإشكاليات الميدانية والحلول -->
+    <div class="section-block">
+      <div class="section-title">
+        <span class="section-title-icon">٣</span>
+        <span>تشخيص الواقع الميداني والحلول الذكية التي تقدمها المنصة</span>
+      </div>
+      <div class="grid-2">
+        <div class="info-card clay">
+          <h4>❌ التحديات الراهنة في التسيير التقليدي:</h4>
+          <p>• تأخر وصول بلاغات المواطنين وتشتتها عبر مواقع التواصل.<br>
+          • خروج عتاد ثقيل (جرافة) لنقاط تتطلب تدخلاً يدوياً بسيطاً، أو العكس (هدر الوقود).<br>
+          • تكرار البلاغات لنفس النقطة وإرباك مصالح النظافة.<br>
+          • عفوية المبادرات التطوعية وغياب التنسيق مع مصالح البلدية والغابات.</p>
+        </div>
+        <div class="info-card highlight">
+          <h4>✅ المعالجة المبتكرة عبر منصة «بيّضها»:</h4>
+          <p>• رصد لحظي مصور بنظام GPS دقيق على خارطة تفاعلية.<br>
+          • توصيف حجم التدخل مسبقاً (يدوي / شاحنة 3.5T / جرافة ثقيلة).<br>
+          • خوارزمية ذكية لمنع تكرار البلاغات المتقاربة (+1 تأكيد).<br>
+          • ربط المبادرات بالمساجد، لجان الأحياء، ومصالح البلدية عبر لوحة منسق موحدة.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-num">
+      <span>منصة «بيّضها» - ولاية البيض (ملف العرض الرسمي للتبني)</span>
+      <span>الصفحة 1 من 3</span>
+    </div>
+  </div>
+
+  <!-- ================= PAGE 2: ARCHITECTURE & OPERATIONAL WORKFLOW ================= -->
+  <div class="page">
+    <div class="official-header" style="margin-bottom: 12px; padding-bottom: 8px;">
+      <div class="official-rep" style="font-size: 14px;">الجمهورية الجزائرية الديمقراطية الشعبية - ولاية البيض</div>
+      <div class="official-sub">ملف عرض مشروع: منصة «بيّضها» للتحول البيئي والحضري التشاركي</div>
+    </div>
+
+    <!-- 4. الركائز الوظيفية للمنظومة -->
+    <div class="section-block">
+      <div class="section-title">
+        <span class="section-title-icon">٤</span>
+        <span>الركائز الوظيفية والتقنية الأساسية للمنصة</span>
+      </div>
+
+      <div class="pillar-box">
+        <h4>1. خارطة الرادار والرصد الجغرافي الحي (Interactive Radar):</h4>
+        <p>تمنح مصالح البلدية ومديرية البيئة رؤية بانورامية شاملة لنقاط التجمع والمواقع المرصودة مصنفة بالألوان: (أحمر: نقطة سوداء | برتقالي: مبادرة مبرمجة | أخضر: فضاء مؤهل ومسترجع).</p>
+      </div>
+
+      <div class="pillar-box">
+        <h4>2. نظام البلاغ المهيكل الذكي (Structured Reporting & Proximity Triage):</h4>
+        <p>يلتقط البلاغ مع صورة مضغوطة برمجياً (&lt;90KB) مع فرز فوري للعتاد المطلوب (خفيف / متوسط / آليات ثقيلة). وفي حال وجود بلاغ قائم على بعد أقل من 85 متراً، يحث النظام المواطن على تأكيده (+1) لرفع أولوية التدخل دون تكرار البيانات.</p>
+      </div>
+
+      <div class="pillar-box">
+        <h4>3. بوابة المنسق الميداني الموحد (Single Coordinator Portal):</h4>
+        <p>واجهة مخصصة للمسؤول الميداني المعتمد (ممثل البلدية / المجتمع المدني) لفرز البلاغات، توثيق الإنجاز بصورة الوضع (بعد التدخل)، وتوليد <strong>تقرير بلدي دوري فوري</strong> منسق بنقرة واحدة للإرسال عبر WhatsApp إلى رئيس البلدية أو مدراء الهيئات التنفيذية.</p>
+      </div>
+
+      <div class="pillar-box">
+        <h4>4. ميثاق الإحسان الحضري وتويزة المساجد (Mosque Civic Charter):</h4>
+        <p>فضاء فريد يُؤصل للعمل البيئي كقيمة دينية وإيمانية (إماطة الأذى، الغرس صدقة)، متضمناً <strong>أداة توليد ملصق الإعلان المسجدي والجداري (A4 Printable Poster)</strong> الجاهز للطباعة والتعليق في المساجد والمحلات لحشد المتطوعين برعاية لجان الأحياء.</p>
+      </div>
+
+      <div class="pillar-box">
+        <h4>5. سجل التحول والارتقاء البيئي (Before/After Impact Wall):</h4>
+        <p>معرض تفاعلي مصور يبرز الفضاءات المسترجعة بتقنية السحب المقارن (قبل / بعد) لتوثيق جهود مصالح الدولة والمتطوعين أمام الرأي العام وتعزيز روح التنافس الإيجابي بين الأحياء.</p>
+      </div>
+    </div>
+
+    <!-- 5. مصفوفة التكامل بين الهيئات والقطاعات -->
+    <div class="section-block">
+      <div class="section-title">
+        <span class="section-title-icon">٥</span>
+        <span>مصفوفة الشراكة والتكامل القطاعي بولاية البيض</span>
+      </div>
+      <table class="data-table">
+        <tr>
+          <th>الهيئة / القطاع</th>
+          <th>الدور الاستراتيجي في المنظومة</th>
+          <th>المكاسب المحققة</th>
+        </tr>
+        <tr>
+          <td><strong>المجلس الشعبي البلدي (APC)</strong></td>
+          <td>اعتماد تقارير المنسق وتوجيه شاحنات النظافة والعتاد نحو النقاط ذات الأولوية.</td>
+          <td>ترشيد حركة الآليات بنسبة 40% وخفض استهلاك الوقود.</td>
+        </tr>
+        <tr>
+          <td><strong>مديرية البيئة ومحافظة الغابات</strong></td>
+          <td>توفير الشتلات الملائمة للبيئة السهبية (الصنوبر، البطم) والتأطير الإيكولوجي.</td>
+          <td>مكافحة التصحر وزيادة الرقعة الخضراء الحضرية بمشاركة مجتمعية.</td>
+        </tr>
+        <tr>
+          <td><strong>مديرية الشؤون الدينية (المساجد)</strong></td>
+          <td>التوعية عبر خطب الجمعة وتفعيل لجان المساجد في حملات التويزة الدورية.</td>
+          <td>ترسيخ الوعي الديني بأهمية صيانة المحيط والمال العام.</td>
+        </tr>
+        <tr>
+          <td><strong>الحماية المدنية والأمن</strong></td>
+          <td>تنقية مجاري الأودية ومنافذ السيول الموسمية وتأمين المبادرات.</td>
+          <td>الوقاية الاستباقية من أخطار الفيضانات والتقلبات الجوية.</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="page-num">
+      <span>منصة «بيّضها» - ولاية البيض (ملف العرض الرسمي للتبني)</span>
+      <span>الصفحة 2 من 3</span>
+    </div>
+  </div>
+
+  <!-- ================= PAGE 3: IMPACT, ROI & ROADMAP ================= -->
+  <div class="page">
+    <div class="official-header" style="margin-bottom: 12px; padding-bottom: 8px;">
+      <div class="official-rep" style="font-size: 14px;">الجمهورية الجزائرية الديمقراطية الشعبية - ولاية البيض</div>
+      <div class="official-sub">ملف عرض مشروع: منصة «بيّضها» للتحول البيئي والحضري التشاركي</div>
+    </div>
+
+    <!-- 6. العوائد والمكاسب العامة للولاية -->
+    <div class="section-block">
+      <div class="section-title">
+        <span class="section-title-icon">٦</span>
+        <span>الأثر التنموي والمكاسب المباشرة لولاية البيض (ROI & Impact)</span>
+      </div>
+      <div class="grid-3">
+        <div class="info-card highlight">
+          <h4>📊 ترشيد النفقات العمومية</h4>
+          <p>القضاء على التدخلات العشوائية للشاحنات بفضل المعاينة المسبقة لحجم وموقع النفايات.</p>
+        </div>
+        <div class="info-card highlight">
+          <h4>🤝 تعزيز الديمقراطية التشاركية</h4>
+          <p>تحويل المواطن من مجرد متفرج أو ناقد إلى شريك ميداني يقدم الحل ويشارك في الإنجاز.</p>
+        </div>
+        <div class="info-card highlight">
+          <h4>🌟 إبراز الإنجازات إعلامياً</h4>
+          <p>توثيق رقمي فوري لجهود الولائية والبلدية مصوراً بنظام الوضع السابق واللاحق (قبل / بعد).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. متطلبات التبني والرعاية الرسمية -->
+    <div class="section-block">
+      <div class="section-title">
+        <span class="section-title-icon">٧</span>
+        <span>الالتماسات والمقترحات لعرض الفكرة للتبني الرسمي</span>
+      </div>
+      <p class="body-text">
+        من أجل إعطاء هذا المشروع أبعاده الميدانية الكاملة ووضعه تحت المظلة الرسمية لخدمة الصالح العام، نلتمس بكل احترام من <strong>السيد والي ولاية البيض</strong> والسلطات المحلية:
+      </p>
+      <ul style="margin-right: 20px; font-size: 12px; color: #2d3748; line-height: 1.8;">
+        <li><strong>١. الرعاية الرسمية للمنصة:</strong> تبني المنصة كأداة رقمية مساعدة لديوان الولاية، بلدية البيض، ومديرية البيئة.</li>
+        <li><strong>٢. تعيين ضابط اتصال / منسق بلدي:</strong> تكليف مسؤول من مصلحة النظافة أو النظافة وحماية البيئة لمتابعة لوحة التسيير والتقارير الدورية.</li>
+        <li><strong>٣. إعطاء إشارة الانطلاق الميداني:</strong> تدشين المنصة رسمياً بمناسبة اليوم الوطني للبلدية أو اليوم العالمي للبيئة بإطلاق أول حملة تويزة تشاركية نموذجية.</li>
+        <li><strong>٤. إشراك المساجد ووسائل الإعلام المحلية:</strong> دعوة أئمة المساجد وإذاعة البيض الجهوية للتعريف بالمنصة وتحفيز الشباب على الانخراط الإيجابي.</li>
+      </ul>
+    </div>
+
+    <!-- 8. جاهزية التطبيق والروابط الرسمية -->
+    <div class="section-block">
+      <div class="section-title">
+        <span class="section-title-icon">٨</span>
+        <span>الجاهزية الفنية للمنظومة</span>
+      </div>
+      <div style="background: var(--bg-light); border: 1px solid var(--border); padding: 12px; border-radius: 6px; font-size: 11.5px;">
+        <p><strong>• رابط المنصة على السحابة (جاهز للتشغيل الحي):</strong> <code style="color: var(--accent); font-weight: 700;">https://bayedha.vercel.app</code></p>
+        <p><strong>• المستودع المصدري المفتوح (GitHub):</strong> <code style="color: var(--primary);">https://github.com/Salahalioui/bayedha</code></p>
+        <p><strong>• قاعدة البيانات المركزية:</strong> Supabase Cloud Live Sync (المجهزة بقناة Real-Time نشطة).</p>
+      </div>
+    </div>
+
+    <!-- الخاتمة والتوقيع -->
+    <div class="sign-area">
+      <div class="sign-box" style="text-align: right;">
+        <p><strong>تحريراً بولاية البيض، في:</strong> 17 أوت 2026</p>
+        <p style="color: var(--text-muted); font-size: 11px; margin-top: 4px;">مبادرة رقمية مواطنة لخدمة ولاية البيض</p>
+      </div>
+      <div class="sign-box">
+        <p><strong>فريق تطوير وتنسيق مبادرة «بيّضها»</strong></p>
+        <div style="height: 35px; display: flex; align-items: center; justify-content: center; color: var(--accent); font-weight: 700; font-size: 13px;">
+          [ بيّضها نحو بيئة حضرية راقية ]
+        </div>
+      </div>
+    </div>
+
+    <div class="page-num">
+      <span>منصة «بيّضها» - ولاية البيض (ملف العرض الرسمي للتبني)</span>
+      <span>الصفحة 3 من 3</span>
+    </div>
+  </div>
+
+</body>
+</html>
