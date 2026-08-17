@@ -1,4 +1,18 @@
 // map.js - Leaflet Map Engine for El Bayadh with Upvoting & Proximity Marker Support
+
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+if (!window.escapeHTML) {
+  window.escapeHTML = escapeHTML;
+}
+
 class BayedhaMap {
   constructor(mapContainerId) {
     this.containerId = mapContainerId;
@@ -107,19 +121,6 @@ class BayedhaMap {
       popupAnchor: [0, -18]
     });
   }
-
-function escapeHTML(str) {
-  if (str === null || str === undefined) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
-if (!window.escapeHTML) {
-  window.escapeHTML = escapeHTML;
-}
 
   renderSpots(spots, store) {
     if (!this.map || !this.markersLayer) return;
