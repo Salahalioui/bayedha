@@ -49,8 +49,7 @@ class AppStore {
       // 1. Fetch live spots from Supabase
       const { data: cloudSpots, error: spotsErr } = await this.supabase
         .from('spots')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .select('*');
 
       if (!spotsErr && cloudSpots && cloudSpots.length > 0) {
         this.spots = cloudSpots.map(s => this.mapCloudSpotToLocal(s));
@@ -60,16 +59,19 @@ class AppStore {
       // 2. Fetch live campaigns from Supabase
       const { data: cloudCamps, error: campsErr } = await this.supabase
         .from('campaigns')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .select('*');
 
       if (!campsErr && cloudCamps && cloudCamps.length > 0) {
         this.campaigns = cloudCamps.map(c => this.mapCloudCampToLocal(c));
         localStorage.setItem(this.STORAGE_KEY_CAMPAIGNS, JSON.stringify(this.campaigns));
       }
 
-      this.notify();
-      console.log('✅ Synchronized successfully with Supabase Cloud DB.');
+      if (!spotsErr && !campsErr) {
+        this.notify();
+        console.log('✅ Synchronized successfully with Supabase Cloud DB.');
+      } else {
+        console.log('ℹ️ Supabase tables initializing or offline (using local storage cache).');
+      }
 
       // 3. Realtime Subscription (Live Multi-Device Push)
       this.supabase
