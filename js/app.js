@@ -1,4 +1,19 @@
 // app.js - Main Application Orchestrator with Single Coordinator, Image Compressor & Mosque Poster Generator
+// Human-Centered WebDev: WCAG 2.2 AA Focus Trapping, Keyboard Navigation, XSS Protection & State Resilience
+
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+if (!window.escapeHTML) {
+  window.escapeHTML = escapeHTML;
+}
+
 class BayedhaApp {
   constructor() {
     this.store = window.appStore;
@@ -9,6 +24,8 @@ class BayedhaApp {
     this.coordAfterPhotoData = null;
     this.activeNearbySpot = null;
     this.isCoordAuthenticated = false;
+    this.lastFocusedElement = null;
+    this.activeModalId = null;
 
     this.init();
   }
@@ -96,9 +113,12 @@ class BayedhaApp {
 
     const t = this.store.getT();
     listContainer.innerHTML = filteredSpots.map(spot => {
-      const title = this.store.getI18nText(spot.title);
-      const neighbourhood = this.store.getI18nText(spot.neighbourhood);
-      const upvotes = spot.upvotes || 1;
+      const title = escapeHTML(this.store.getI18nText(spot.title));
+      const neighbourhood = escapeHTML(this.store.getI18nText(spot.neighbourhood));
+      const upvotes = Number(spot.upvotes) || 1;
+      const reportedAt = escapeHTML(spot.reportedAt || '');
+      const safeLat = Number(spot.lat);
+      const safeLng = Number(spot.lng);
       
       let badgeHtml = '';
       if (spot.status === 'blackspot') {
@@ -110,10 +130,10 @@ class BayedhaApp {
       }
 
       return `
-        <div class="spot-mini-card" onclick="window.app.focusSpotOnMap(${spot.lat}, ${spot.lng})">
+        <div class="spot-mini-card" role="button" tabindex="0" onclick="window.app.focusSpotOnMap(${safeLat}, ${safeLng})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); window.app.focusSpotOnMap(${safeLat}, ${safeLng});}">
           <div class="spot-mini-header">
             ${badgeHtml}
-            <small class="text-muted" style="font-size: 11px;">${spot.reportedAt || ''}</small>
+            <small class="text-muted" style="font-size: 11px;">${reportedAt}</small>
           </div>
           <h4 class="spot-mini-title">${title}</h4>
           <div class="spot-mini-meta">
@@ -150,7 +170,7 @@ class BayedhaApp {
           <p style="font-size: 13px; color: var(--text-secondary); max-width: 460px; margin: 0 auto 16px auto;">
             ${this.store.lang === 'ar' ? 'كن أول من يطلق مبادرة "تويزة" لتنظيف حي أو تشجير فضاء في بلدية البيض.' : 'Soyez le premier à programmer une opération citoyenne de nettoyage ou de reboisement.'}
           </p>
-          <button class="btn btn-primary" onclick="window.app.openModal('newCampaignModal')">
+          <button class="btn btn-primary" onclick="window.app.openModal('newCampaignModal', this)">
             + ${this.store.lang === 'ar' ? 'برمجة أول مبادرة تطوعية' : 'Programmer une initiative'}
           </button>
         </div>
@@ -159,18 +179,22 @@ class BayedhaApp {
     }
 
     container.innerHTML = campaigns.map(camp => {
-      const title = this.store.getI18nText(camp.title);
-      const meetingPoint = this.store.getI18nText(camp.meetingPoint);
-      const organizer = this.store.getI18nText(camp.organizer);
-      const target = this.store.getI18nText(camp.target);
-      const tools = this.store.getI18nArray(camp.toolsNeeded);
+      const title = escapeHTML(this.store.getI18nText(camp.title));
+      const meetingPoint = escapeHTML(this.store.getI18nText(camp.meetingPoint));
+      const organizer = escapeHTML(this.store.getI18nText(camp.organizer));
+      const target = escapeHTML(this.store.getI18nText(camp.target));
+      const tools = this.store.getI18nArray(camp.toolsNeeded).map(escapeHTML);
+      const safeId = escapeHTML(camp.id);
+      const safeDate = escapeHTML(camp.date);
+      const safeVolunteers = Number(camp.volunteersRegistered) || 0;
+      const safeBanner = camp.banner ? encodeURI(camp.banner).replace(/"/g, '&quot;') : '';
 
       const joinBtnClass = camp.isUserJoined ? 'btn-outline' : 'btn-accent';
       const joinBtnText = camp.isUserJoined ? t.btnJoined : t.btnJoinCampaign;
 
       return `
-        <div class="campaign-card" id="camp-card-${camp.id}">
-          <div class="camp-banner" style="background-image: url('${camp.banner}')">
+        <div class="campaign-card" id="camp-card-${safeId}">
+          <div class="camp-banner" style="background-image: url('${safeBanner}')">
             <span class="badge badge-warning">${t.legendCampaign}</span>
           </div>
           <div class="camp-body">
@@ -179,7 +203,7 @@ class BayedhaApp {
             <div class="camp-meta-list">
               <div class="camp-meta-row">
                 <strong>${t.campaignDate}:</strong>
-                <span>${camp.date}</span>
+                <span>${safeDate}</span>
               </div>
               <div class="camp-meta-row">
                 <strong>${t.campaignLocation}:</strong>
@@ -204,9 +228,9 @@ class BayedhaApp {
             <div class="camp-footer">
               <div class="volunteer-count-badge">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                <span>${camp.volunteersRegistered} ${t.campaignVolunteers}</span>
+                <span>${safeVolunteers} ${t.campaignVolunteers}</span>
               </div>
-              <button class="btn btn-sm ${joinBtnClass}" onclick="window.app.toggleJoinCampaign('${camp.id}')">
+              <button class="btn btn-sm ${joinBtnClass}" onclick="window.app.toggleJoinCampaign('${safeId}')">
                 ${joinBtnText}
               </button>
             </div>
@@ -239,21 +263,24 @@ class BayedhaApp {
     }
 
     container.innerHTML = resolvedSpots.map(spot => {
-      const title = this.store.getI18nText(spot.title);
-      const neighbourhood = this.store.getI18nText(spot.neighbourhood);
-      const description = this.store.getI18nText(spot.description);
-      const cleanedBy = this.store.getI18nText(spot.cleanedBy);
+      const title = escapeHTML(this.store.getI18nText(spot.title));
+      const neighbourhood = escapeHTML(this.store.getI18nText(spot.neighbourhood));
+      const description = escapeHTML(this.store.getI18nText(spot.description));
+      const cleanedBy = escapeHTML(this.store.getI18nText(spot.cleanedBy));
+      const safeId = escapeHTML(spot.id);
+      const beforePhoto = spot.beforePhoto || spot.photo ? encodeURI(spot.beforePhoto || spot.photo).replace(/"/g, '&quot;') : '';
+      const afterPhoto = spot.afterPhoto ? encodeURI(spot.afterPhoto).replace(/"/g, '&quot;') : '';
 
       return `
         <div class="before-after-card">
-          <div class="ba-slider-container" id="ba-${spot.id}">
-            <div class="ba-image ba-image-before" style="background-image: url('${spot.beforePhoto || spot.photo}')"></div>
-            <div class="ba-image ba-image-after" style="background-image: url('${spot.afterPhoto}')"></div>
+          <div class="ba-slider-container" id="ba-${safeId}">
+            <div class="ba-image ba-image-before" style="background-image: url('${beforePhoto}')"></div>
+            <div class="ba-image ba-image-after" style="background-image: url('${afterPhoto}')"></div>
             
             <div class="ba-label ba-label-before">${this.store.lang === 'ar' ? 'الوضع السابق' : 'État Initial'}</div>
             <div class="ba-label ba-label-after">${this.store.lang === 'ar' ? 'بعد التدخل' : 'Après Réhabilitation'}</div>
             
-            <div class="ba-slider-handle">
+            <div class="ba-slider-handle" tabindex="0" role="slider" aria-label="مقارنة الصورة قبل وبعد">
               <div class="ba-handle-circle">
                 <svg class="icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;"><polyline points="8 17 3 12 8 7"/><polyline points="16 17 21 12 16 7"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
               </div>
@@ -299,7 +326,10 @@ class BayedhaApp {
     }
 
     selectEl.innerHTML = campaigns.map(camp => {
-      return `<option value="${camp.id}">${this.store.getI18nText(camp.title)} (${camp.date})</option>`;
+      const safeId = escapeHTML(camp.id);
+      const safeTitle = escapeHTML(this.store.getI18nText(camp.title));
+      const safeDate = escapeHTML(camp.date);
+      return `<option value="${safeId}">${safeTitle} (${safeDate})</option>`;
     }).join('');
 
     this.updatePosterPreview(campaigns[0].id);
@@ -451,9 +481,9 @@ class BayedhaApp {
     if (nearby && nearby.spot) {
       this.activeNearbySpot = nearby.spot;
       alertBox.classList.add('active');
-      const spotTitle = this.store.getI18nText(nearby.spot.title);
-      const dist = nearby.distance;
-      const votes = nearby.spot.upvotes || 1;
+      const spotTitle = escapeHTML(this.store.getI18nText(nearby.spot.title));
+      const dist = Number(nearby.distance) || 0;
+      const votes = Number(nearby.spot.upvotes) || 1;
 
       if (this.store.lang === 'ar') {
         alertMsg.innerHTML = `يوجد بلاغ قائم بالفعل على بعد <strong>${dist} متراً</strong>: «${spotTitle}» (مؤكد من طرف <strong>${votes} مواطناً</strong>). تفادياً لتكرار البيانات، يمكنك تأكيده مباشرة لدعم معالجته.`;
@@ -514,7 +544,9 @@ class BayedhaApp {
     }, 150);
   }
 
-  openModal(modalId) {
+  openModal(modalId, triggerElement) {
+    this.lastFocusedElement = triggerElement || document.activeElement;
+    this.activeModalId = modalId;
     const modal = document.getElementById(modalId);
     if (modal) {
       modal.classList.add('active');
@@ -522,14 +554,29 @@ class BayedhaApp {
       const alertBox = document.getElementById('proximityAlertBox');
       if (alertBox) alertBox.classList.remove('active');
       this.activeNearbySpot = null;
+
+      // Focus management: focus the first interactive element or close button
+      setTimeout(() => {
+        const focusable = modal.querySelector('input:not([type="hidden"]), select, textarea, button:not(.modal-close-btn), .modal-close-btn');
+        if (focusable) focusable.focus();
+      }, 50);
     }
   }
 
   closeModal(modalId) {
-    const modal = document.getElementById(modalId);
+    const idToClose = modalId || this.activeModalId;
+    if (!idToClose) return;
+
+    const modal = document.getElementById(idToClose);
     if (modal) {
       modal.classList.remove('active');
       document.body.style.overflow = '';
+      this.activeModalId = null;
+
+      // Restore focus to triggering element (WCAG 2.4.3 Focus Order)
+      if (this.lastFocusedElement && typeof this.lastFocusedElement.focus === 'function') {
+        this.lastFocusedElement.focus();
+      }
     }
   }
 
@@ -541,7 +588,7 @@ class BayedhaApp {
     toast.className = 'toast';
     toast.innerHTML = `
       <svg class="icon" viewBox="0 0 24 24" style="color: #a7f3d0;"><path d="M20 6 9 17l-5-5"/></svg>
-      <span>${message}</span>
+      <span>${escapeHTML(message)}</span>
     `;
     container.appendChild(toast);
 
@@ -557,11 +604,21 @@ class BayedhaApp {
   bindCoordinatorEvents() {
     const btnOpenCoord = document.getElementById('btnOpenCoordinatorModal');
     if (btnOpenCoord) {
-      btnOpenCoord.addEventListener('click', () => {
-        this.openModal('coordinatorModal');
+      btnOpenCoord.addEventListener('click', (e) => {
+        this.openModal('coordinatorModal', e.currentTarget);
+        const pinError = document.getElementById('coordPinError');
+        if (pinError) {
+          pinError.textContent = '';
+          pinError.classList.remove('active');
+        }
+
         if (!this.isCoordAuthenticated) {
           document.getElementById('coordPinScreen').style.display = 'block';
           document.getElementById('coordDashboardScreen').style.display = 'none';
+          setTimeout(() => {
+            const pinInput = document.getElementById('coordPinInput');
+            if (pinInput) pinInput.focus();
+          }, 60);
         } else {
           document.getElementById('coordPinScreen').style.display = 'none';
           document.getElementById('coordDashboardScreen').style.display = 'block';
@@ -573,16 +630,30 @@ class BayedhaApp {
     // PIN check
     const btnCheckPin = document.getElementById('btnCheckCoordPin');
     const pinInput = document.getElementById('coordPinInput');
+    const pinError = document.getElementById('coordPinError');
+
     const verifyPin = () => {
       const pin = pinInput.value.trim();
       if (pin === '2026' || pin === '1234') {
         this.isCoordAuthenticated = true;
+        if (pinError) {
+          pinError.textContent = '';
+          pinError.classList.remove('active');
+        }
         document.getElementById('coordPinScreen').style.display = 'none';
         document.getElementById('coordDashboardScreen').style.display = 'block';
         this.renderCoordinatorDashboard();
-        this.showToast('مرحباً بك في بوابة المنسق الميداني لبلدية البيض.');
+        this.showToast(this.store.lang === 'ar' ? 'مرحباً بك في لوحة المنسق الميداني لبلدية البيض.' : 'Bienvenue dans le portail coordinateur.');
       } else {
-        alert(this.store.getT().pinError);
+        const errorMsg = this.store.lang === 'ar' ? 'الرمز السري غير صحيح. يرجى إعادة المحاولة.' : 'Code PIN incorrect. Veuillez réessayer.';
+        if (pinError) {
+          pinError.textContent = errorMsg;
+          pinError.classList.remove('active');
+          void pinError.offsetWidth; // Trigger reflow for shake animation
+          pinError.classList.add('active');
+        }
+        pinInput.focus();
+        pinInput.select();
       }
     };
 
@@ -618,11 +689,17 @@ class BayedhaApp {
 
     if (afterPhotoBox && afterFileInput) {
       afterPhotoBox.addEventListener('click', () => afterFileInput.click());
+      afterPhotoBox.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          afterFileInput.click();
+        }
+      });
+
       afterFileInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (file) {
           try {
-            // Compress with Canvas ImageCompressor
             this.coordAfterPhotoData = await window.ImageCompressor.compress(file, 1200, 0.72);
             if (afterPhotoPreview) {
               afterPhotoPreview.src = this.coordAfterPhotoData;
@@ -646,8 +723,9 @@ class BayedhaApp {
       });
     }
 
-    // Submit Resolution Form
+    // Submit Resolution Form with Loading State
     const resolveForm = document.getElementById('coordResolveForm');
+    const btnSubmitResolve = document.getElementById('btnSubmitResolveForm');
     if (resolveForm) {
       resolveForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -655,25 +733,39 @@ class BayedhaApp {
         const cleanedBy = document.getElementById('resolveCleanedBy').value.trim();
 
         if (!spotId) {
-          alert('يرجى اختيار النقطة المطلوب إغلاقها.');
+          this.showToast(this.store.lang === 'ar' ? 'يرجى اختيار النقطة المطلوب إغلاقها.' : 'Veuillez sélectionner le point.');
           return;
         }
 
-        const success = this.store.resolveSpot(
-          spotId,
-          this.coordAfterPhotoData || 'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?w=800&auto=format&fit=crop&q=80',
-          cleanedBy
-        );
-
-        if (success) {
-          resolveForm.reset();
-          this.coordAfterPhotoData = null;
-          if (afterPhotoPreview) afterPhotoPreview.style.display = 'none';
-          if (afterPhotoPrompt) afterPhotoPrompt.style.display = 'inline';
-          this.closeModal('coordinatorModal');
-          this.switchTab('impact');
-          this.showToast(this.store.getT().toastSpotResolved);
+        if (btnSubmitResolve) {
+          btnSubmitResolve.disabled = true;
+          btnSubmitResolve.setAttribute('aria-busy', 'true');
+          btnSubmitResolve.innerHTML = `<span class="btn-loading-spinner"></span> ${this.store.lang === 'ar' ? 'جاري التوثيق...' : 'Validation...'}`;
         }
+
+        setTimeout(() => {
+          const success = this.store.resolveSpot(
+            spotId,
+            this.coordAfterPhotoData || 'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?w=800&auto=format&fit=crop&q=80',
+            cleanedBy
+          );
+
+          if (btnSubmitResolve) {
+            btnSubmitResolve.disabled = false;
+            btnSubmitResolve.removeAttribute('aria-busy');
+            btnSubmitResolve.innerHTML = `<span>${this.store.getT().btnSubmitResolution || 'اعتماد وتوثيق الفضاء'}</span>`;
+          }
+
+          if (success) {
+            resolveForm.reset();
+            this.coordAfterPhotoData = null;
+            if (afterPhotoPreview) afterPhotoPreview.style.display = 'none';
+            if (afterPhotoPrompt) afterPhotoPrompt.style.display = 'inline';
+            this.closeModal('coordinatorModal');
+            this.switchTab('impact');
+            this.showToast(this.store.getT().toastSpotResolved);
+          }
+        }, 350);
       });
     }
 
@@ -710,9 +802,10 @@ class BayedhaApp {
         `;
       } else {
         triageContainer.innerHTML = activeBlackspots.map(spot => {
-          const title = this.store.getI18nText(spot.title);
-          const neighbourhood = this.store.getI18nText(spot.neighbourhood);
-          const upvotes = spot.upvotes || 1;
+          const title = escapeHTML(this.store.getI18nText(spot.title));
+          const neighbourhood = escapeHTML(this.store.getI18nText(spot.neighbourhood));
+          const safeId = escapeHTML(spot.id);
+          const upvotes = Number(spot.upvotes) || 1;
 
           return `
             <div class="coord-spot-item">
@@ -722,13 +815,13 @@ class BayedhaApp {
               </div>
               <p style="font-size: 12.5px; color: var(--text-secondary); margin: 2px 0;">${title}</p>
               <div class="coord-spot-actions">
-                <button class="btn btn-sm btn-primary" onclick="window.app.triggerCoordResolveModal('${spot.id}')">
+                <button class="btn btn-sm btn-primary" onclick="window.app.triggerCoordResolveModal('${safeId}')">
                   ✓ ${t.btnResolveSpotTrigger}
                 </button>
-                <button class="btn btn-sm btn-outline" onclick="window.app.openCreateCampaignFromSpot('${spot.id}')">
+                <button class="btn btn-sm btn-outline" onclick="window.app.openCreateCampaignFromSpot('${safeId}')">
                   📅 برمجة حملة
                 </button>
-                <button class="btn btn-sm btn-danger" onclick="window.app.coordinatorDeleteSpot('${spot.id}')">
+                <button class="btn btn-sm btn-danger" onclick="window.app.coordinatorDeleteSpot('${safeId}')">
                   🗑️ ${t.btnDeleteSpot}
                 </button>
               </div>
@@ -742,9 +835,10 @@ class BayedhaApp {
     const selectEl = document.getElementById('resolveSpotSelect');
     if (selectEl) {
       selectEl.innerHTML = activeBlackspots.map(spot => {
-        const title = this.store.getI18nText(spot.title);
-        const neighbourhood = this.store.getI18nText(spot.neighbourhood);
-        return `<option value="${spot.id}">${neighbourhood} - ${title.substring(0, 50)}...</option>`;
+        const safeId = escapeHTML(spot.id);
+        const title = escapeHTML(this.store.getI18nText(spot.title));
+        const neighbourhood = escapeHTML(this.store.getI18nText(spot.neighbourhood));
+        return `<option value="${safeId}">${neighbourhood} - ${title.substring(0, 50)}...</option>`;
       }).join('');
     }
 
@@ -776,30 +870,75 @@ class BayedhaApp {
 
   // Structured Reporting Form Bindings
   bindStructuredFormEvents() {
-    // 1. Radio Cards for Volume
-    document.querySelectorAll('#volumeCardsGroup .radio-card').forEach(card => {
-      card.addEventListener('click', () => {
-        document.querySelectorAll('#volumeCardsGroup .radio-card').forEach(c => c.classList.remove('selected'));
-        card.classList.add('selected');
-        const volInput = document.getElementById('reportVolume');
-        if (volInput) volInput.value = card.dataset.volume;
+    // 1. Radio Cards for Volume (Click & Keyboard Navigation)
+    const volumeCards = Array.from(document.querySelectorAll('#volumeCardsGroup .radio-card'));
+    const selectVolumeCard = (card) => {
+      volumeCards.forEach(c => {
+        c.classList.remove('selected');
+        c.setAttribute('aria-checked', 'false');
+      });
+      card.classList.add('selected');
+      card.setAttribute('aria-checked', 'true');
+      card.focus();
+      const volInput = document.getElementById('reportVolume');
+      if (volInput) volInput.value = card.dataset.volume;
+    };
+
+    volumeCards.forEach((card, index) => {
+      card.addEventListener('click', () => selectVolumeCard(card));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          selectVolumeCard(card);
+        } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          const nextIndex = (index + 1) % volumeCards.length;
+          selectVolumeCard(volumeCards[nextIndex]);
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const prevIndex = (index - 1 + volumeCards.length) % volumeCards.length;
+          selectVolumeCard(volumeCards[prevIndex]);
+        }
       });
     });
 
-    // 2. Multi-select Material Chips
+    // 2. Multi-select Material Chips with aria-pressed
     document.querySelectorAll('#materialsChipsGroup .chip-btn').forEach(chip => {
       chip.addEventListener('click', () => {
-        chip.classList.toggle('selected');
+        const isSelected = chip.classList.toggle('selected');
+        chip.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
       });
     });
 
-    // 3. Accessibility Pills
-    document.querySelectorAll('#accessPillGroup .access-pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        document.querySelectorAll('#accessPillGroup .access-pill').forEach(p => p.classList.remove('selected'));
-        pill.classList.add('selected');
-        const accessInput = document.getElementById('reportAccess');
-        if (accessInput) accessInput.value = pill.dataset.access;
+    // 3. Accessibility Pills (Click & Keyboard Navigation)
+    const accessPills = Array.from(document.querySelectorAll('#accessPillGroup .access-pill'));
+    const selectAccessPill = (pill) => {
+      accessPills.forEach(p => {
+        p.classList.remove('selected');
+        p.setAttribute('aria-checked', 'false');
+      });
+      pill.classList.add('selected');
+      pill.setAttribute('aria-checked', 'true');
+      pill.focus();
+      const accessInput = document.getElementById('reportAccess');
+      if (accessInput) accessInput.value = pill.dataset.access;
+    };
+
+    accessPills.forEach((pill, index) => {
+      pill.addEventListener('click', () => selectAccessPill(pill));
+      pill.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          selectAccessPill(pill);
+        } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          const nextIndex = (index + 1) % accessPills.length;
+          selectAccessPill(accessPills[nextIndex]);
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const prevIndex = (index - 1 + accessPills.length) % accessPills.length;
+          selectAccessPill(accessPills[prevIndex]);
+        }
       });
     });
 
@@ -821,7 +960,7 @@ class BayedhaApp {
     if (btnAutoGPS) {
       btnAutoGPS.addEventListener('click', () => {
         if (!navigator.geolocation) {
-          alert('خاصية تحديد الموقع غير مدعومة');
+          this.showToast('خاصية تحديد الموقع غير مدعومة');
           return;
         }
         navigator.geolocation.getCurrentPosition(
@@ -850,8 +989,10 @@ class BayedhaApp {
       });
     }
 
-    // 6. Submit Structured Report with Compressed Image
+    // 6. Submit Structured Report with Compressed Image & Loading State
     const reportForm = document.getElementById('reportForm');
+    const btnSubmitReport = document.getElementById('btnSubmitReportForm');
+
     if (reportForm) {
       reportForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -869,8 +1010,14 @@ class BayedhaApp {
         });
 
         if (!neighbourhood) {
-          alert('يرجى كتابة اسم الحي أو المعلم.');
+          this.showToast(this.store.lang === 'ar' ? 'يرجى كتابة اسم الحي أو المعلم.' : 'Veuillez saisir le quartier.');
           return;
+        }
+
+        if (btnSubmitReport) {
+          btnSubmitReport.disabled = true;
+          btnSubmitReport.setAttribute('aria-busy', 'true');
+          btnSubmitReport.innerHTML = `<span class="btn-loading-spinner"></span> ${this.store.lang === 'ar' ? 'جاري تسجيل البلاغ...' : 'Enregistrement...'}`;
         }
 
         let volumeTitleAr = 'حجم محدود';
@@ -884,31 +1031,39 @@ class BayedhaApp {
         const descAr = `الموقع: ${neighbourhood}. نوع التدخل: ${volumeTitleAr}. المسلك: ${access === 'paved' ? 'معبد للشاحنات' : 'ضيق/وعر'}.${notes ? ' ملاحظات: ' + notes : ''}`;
         const descFr = `Secteur: ${neighbourhood}. Moyens: ${volumeTitleFr}. Accès: ${access === 'paved' ? 'Carrossable' : 'Difficile'}.${notes ? ' Notes: ' + notes : ''}`;
 
-        this.store.addBlackspot({
-          title: titleAr,
-          category: 'waste',
-          neighbourhood: neighbourhood,
-          description: descAr,
-          urgency: volume === 'heavy' ? 'high' : (volume === 'medium' ? 'medium' : 'low'),
-          lat: lat,
-          lng: lng,
-          volume: volume,
-          materials: selectedMaterials,
-          accessibility: access,
-          photo: this.uploadedPhotoData || 'https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?w=800&auto=format&fit=crop&q=80'
-        });
+        setTimeout(() => {
+          this.store.addBlackspot({
+            title: titleAr,
+            category: 'waste',
+            neighbourhood: neighbourhood,
+            description: descAr,
+            urgency: volume === 'heavy' ? 'high' : (volume === 'medium' ? 'medium' : 'low'),
+            lat: lat,
+            lng: lng,
+            volume: volume,
+            materials: selectedMaterials,
+            accessibility: access,
+            photo: this.uploadedPhotoData || 'https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?w=800&auto=format&fit=crop&q=80'
+          });
 
-        reportForm.reset();
-        this.uploadedPhotoData = null;
-        const photoPreview = document.getElementById('photoPreviewImg');
-        const photoPrompt = document.getElementById('photoPromptText');
-        if (photoPreview) photoPreview.style.display = 'none';
-        if (photoPrompt) photoPrompt.style.display = 'inline';
-        
-        this.closeModal('reportModal');
-        this.switchTab('map');
-        this.mapEngine.flyToCoordinates(lat, lng, 16);
-        this.showToast(this.store.getT().toastReportSuccess);
+          if (btnSubmitReport) {
+            btnSubmitReport.disabled = false;
+            btnSubmitReport.removeAttribute('aria-busy');
+            btnSubmitReport.innerHTML = `<span>${this.store.getT().btnSubmitReport || 'اعتماد وتسجيل البلاغ فوراً'}</span>`;
+          }
+
+          reportForm.reset();
+          this.uploadedPhotoData = null;
+          const photoPreview = document.getElementById('photoPreviewImg');
+          const photoPrompt = document.getElementById('photoPromptText');
+          if (photoPreview) photoPreview.style.display = 'none';
+          if (photoPrompt) photoPrompt.style.display = 'inline';
+          
+          this.closeModal('reportModal');
+          this.switchTab('map');
+          this.mapEngine.flyToCoordinates(lat, lng, 16);
+          this.showToast(this.store.getT().toastReportSuccess);
+        }, 350);
       });
     }
   }
@@ -958,16 +1113,16 @@ class BayedhaApp {
 
     // Open Report Modals
     document.querySelectorAll('.btn-open-report').forEach(btn => {
-      btn.addEventListener('click', () => {
-        this.openModal('reportModal');
+      btn.addEventListener('click', (e) => {
+        this.openModal('reportModal', e.currentTarget);
       });
     });
 
     // Open New Campaign Modal
     const newCampBtn = document.getElementById('btnOpenNewCampaign');
     if (newCampBtn) {
-      newCampBtn.addEventListener('click', () => {
-        this.openModal('newCampaignModal');
+      newCampBtn.addEventListener('click', (e) => {
+        this.openModal('newCampaignModal', e.currentTarget);
       });
     }
 
@@ -988,15 +1143,40 @@ class BayedhaApp {
       });
     });
 
+    // Focus Trap & Escape Key Listener (WCAG 2.4.3 & 2.1.2)
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        document.querySelectorAll('.modal-overlay.active').forEach(modal => {
-          this.closeModal(modal.id);
-        });
+        const activeModal = document.querySelector('.modal-overlay.active');
+        if (activeModal) {
+          this.closeModal(activeModal.id);
+        }
+      } else if (e.key === 'Tab') {
+        const activeModal = document.querySelector('.modal-overlay.active');
+        if (activeModal) {
+          const focusables = activeModal.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          if (focusables.length === 0) return;
+
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+
+          if (e.shiftKey) {
+            if (document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            }
+          } else {
+            if (document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }
       }
     });
 
-    // Photo Input Handling with Auto-Compression
+    // Photo Input Handling with Auto-Compression & Keyboard Trigger
     const fileInput = document.getElementById('reportPhotoInput');
     const photoBox = document.getElementById('photoUploaderBox');
     const photoPreview = document.getElementById('photoPreviewImg');
@@ -1004,6 +1184,12 @@ class BayedhaApp {
 
     if (photoBox && fileInput) {
       photoBox.addEventListener('click', () => fileInput.click());
+      photoBox.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          fileInput.click();
+        }
+      });
 
       fileInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
@@ -1057,8 +1243,10 @@ class BayedhaApp {
       });
     }
 
-    // Campaign form submit
+    // Campaign form submit with Loading State
     const newCampForm = document.getElementById('newCampaignForm');
+    const btnSubmitCampaign = document.getElementById('btnSubmitCampaignForm');
+
     if (newCampForm) {
       newCampForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -1068,32 +1256,46 @@ class BayedhaApp {
         const meetingPoint = document.getElementById('campInputMeeting').value.trim();
         const organizer = document.getElementById('campInputOrg').value.trim();
         const tools = document.getElementById('campInputTools').value.trim();
-        const lat = newCampForm.dataset.lat || (33.6835 + (Math.random() - 0.5) * 0.015);
-        const lng = newCampForm.dataset.lng || (1.0163 + (Math.random() - 0.5) * 0.015);
+        const lat = parseFloat(newCampForm.dataset.lat) || (33.6835 + (Math.random() - 0.5) * 0.015);
+        const lng = parseFloat(newCampForm.dataset.lng) || (1.0163 + (Math.random() - 0.5) * 0.015);
 
         if (!title || !date || !meetingPoint) {
-          alert('يرجى استيفاء كافة بيانات المبادرة.');
+          this.showToast(this.store.lang === 'ar' ? 'يرجى استيفاء كافة بيانات المبادرة المطلوبة.' : 'Veuillez remplir tous les champs obligatoires.');
           return;
         }
 
-        this.store.addCampaign({
-          title,
-          type,
-          date,
-          meetingPoint,
-          organizer: organizer || (this.store.lang === 'ar' ? 'فعاليات المجتمع المدني بمدينة البيض' : 'Acteurs de la société civile d\'El Bayadh'),
-          tools,
-          lat,
-          lng
-        });
+        if (btnSubmitCampaign) {
+          btnSubmitCampaign.disabled = true;
+          btnSubmitCampaign.setAttribute('aria-busy', 'true');
+          btnSubmitCampaign.innerHTML = `<span class="btn-loading-spinner"></span> ${this.store.lang === 'ar' ? 'جاري نشر المبادرة...' : 'Publication...'}`;
+        }
 
-        newCampForm.reset();
-        delete newCampForm.dataset.lat;
-        delete newCampForm.dataset.lng;
+        setTimeout(() => {
+          this.store.addCampaign({
+            title,
+            type,
+            date,
+            meetingPoint,
+            organizer: organizer || (this.store.lang === 'ar' ? 'فعاليات المجتمع المدني بمدينة البيض' : 'Acteurs de la société civile d\'El Bayadh'),
+            tools,
+            lat,
+            lng
+          });
 
-        this.closeModal('newCampaignModal');
-        this.switchTab('campaigns');
-        this.showToast(this.store.getT().toastCampaignSuccess);
+          if (btnSubmitCampaign) {
+            btnSubmitCampaign.disabled = false;
+            btnSubmitCampaign.removeAttribute('aria-busy');
+            btnSubmitCampaign.innerHTML = `<span>${this.store.getT().btnSubmitCampaign || 'اعتماد ونشر المبادرة للعموم'}</span>`;
+          }
+
+          newCampForm.reset();
+          delete newCampForm.dataset.lat;
+          delete newCampForm.dataset.lng;
+
+          this.closeModal('newCampaignModal');
+          this.switchTab('campaigns');
+          this.showToast(this.store.getT().toastCampaignSuccess);
+        }, 350);
       });
     }
   }
