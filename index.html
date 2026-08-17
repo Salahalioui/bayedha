@@ -265,7 +265,7 @@
 
         <div class="poster-tool-controls">
           <div class="form-group" style="flex: 1;">
-            <label data-i18n="labelSelectCampForPoster">اختر المبادرة لتوليد ملصقها:</label>
+            <label for="posterCampSelect" data-i18n="labelSelectCampForPoster">اختر المبادرة لتوليد ملصقها:</label>
             <select id="posterCampSelect" class="form-control">
               <!-- Populated dynamically via JS -->
             </select>
@@ -469,19 +469,19 @@
     <div class="modal-card">
       <div class="modal-header">
         <h3 id="modalReportTitle" data-i18n="reportTitle">تسجيل بلاغ عن نقطة سوداء أو تشوه بيئي</h3>
-        <button class="modal-close-btn" aria-label="إغلاق">&times;</button>
+        <button class="modal-close-btn" aria-label="إغلاق النافذة">&times;</button>
       </div>
       <form id="reportForm" class="modal-body">
         
         <!-- SECTION 1: Photo & GPS Coordinates -->
         <div class="form-section">
-          <label class="section-label" data-i18n="labelPhotoLoc">1. المعاينة المصورة والإحداثيات الميدانية</label>
+          <label class="section-label" id="labelPhotoLoc" data-i18n="labelPhotoLoc">1. المعاينة المصورة والإحداثيات الميدانية</label>
           
-          <div class="photo-uploader-box-compact" id="photoUploaderBox">
+          <div class="photo-uploader-box-compact" id="photoUploaderBox" role="button" tabindex="0" aria-label="تحميل أو التقاط صورة النقطة السوداء">
             <input type="file" id="reportPhotoInput" accept="image/*" style="display: none;">
             <svg class="icon" viewBox="0 0 24 24" style="width: 22px; height: 22px; color: var(--color-pine-700);"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
             <span style="font-size: 12.5px; font-weight: 500;" id="photoPromptText" data-i18n="photoHint">انقر لالتقاط صورة أو استيرادها</span>
-            <img id="photoPreviewImg" class="photo-preview-img" alt="Preview" style="display: none; max-height: 120px; width: auto; margin: 0 auto;">
+            <img id="photoPreviewImg" class="photo-preview-img" alt="معاينة الصورة المختارة" style="display: none; max-height: 120px; width: auto; margin: 0 auto;">
           </div>
 
           <div class="location-status-card">
@@ -506,9 +506,9 @@
         </div>
 
         <!-- DYNAMIC PROXIMITY DUPLICATE WARNING CARD -->
-        <div class="proximity-alert-box" id="proximityAlertBox">
+        <div class="proximity-alert-box" id="proximityAlertBox" role="region" aria-live="polite">
           <div class="proximity-header">
-            <svg class="icon" viewBox="0 0 24 24" style="color: var(--color-clay-600);"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <svg class="icon" viewBox="0 0 24 24" style="color: var(--color-clay-600);"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             <span data-i18n="proximityAlertTitle">تنبيه: يوجد بلاغ قائم بالقرب من هذا الموقع</span>
           </div>
           <p class="proximity-body" id="proximityAlertMsg">
@@ -529,11 +529,11 @@
 
         <!-- SECTION 3: Estimated Volume & Equipment (Radio Cards) -->
         <div class="form-section">
-          <label class="section-label" data-i18n="labelVolume">3. الحجم التقديري ونوع التدخل والعتاد المطلوب *</label>
-          <div class="radio-cards-grid" id="volumeCardsGroup">
+          <label class="section-label" id="labelVolume" data-i18n="labelVolume">3. الحجم التقديري ونوع التدخل والعتاد المطلوب *</label>
+          <div class="radio-cards-grid" id="volumeCardsGroup" role="radiogroup" aria-labelledby="labelVolume">
             
             <!-- Light -->
-            <div class="radio-card selected" data-volume="light">
+            <div class="radio-card selected" data-volume="light" role="radio" tabindex="0" aria-checked="true">
               <div class="radio-indicator"></div>
               <div class="radio-card-content">
                 <span class="radio-card-title">🟢 <span data-i18n="volLightTitle">حجم محدود (تدخل يدوي)</span></span>
@@ -542,7 +542,7 @@
             </div>
 
             <!-- Medium -->
-            <div class="radio-card" data-volume="medium">
+            <div class="radio-card" data-volume="medium" role="radio" tabindex="0" aria-checked="false">
               <div class="radio-indicator"></div>
               <div class="radio-card-content">
                 <span class="radio-card-title">🟡 <span data-i18n="volMediumTitle">حجم متوسط (شاحنة نقل 3.5 طن)</span></span>
@@ -551,7 +551,7 @@
             </div>
 
             <!-- Heavy -->
-            <div class="radio-card" data-volume="heavy">
+            <div class="radio-card" data-volume="heavy" role="radio" tabindex="0" aria-checked="false">
               <div class="radio-indicator"></div>
               <div class="radio-card-content">
                 <span class="radio-card-title">🔴 <span data-i18n="volHeavyTitle">حجم ضخم (آليات ثقيلة وجرافة)</span></span>
@@ -565,24 +565,24 @@
 
         <!-- SECTION 4: Waste Materials (Multi-select Chips) -->
         <div class="form-section">
-          <label class="section-label" data-i18n="labelMaterials">4. المكونات الغالبة على النفايات (اختر ما ينطبق)</label>
-          <div class="chips-group" id="materialsChipsGroup">
-            <button type="button" class="chip-btn selected" data-mat="plastic">
+          <label class="section-label" id="labelMaterials" data-i18n="labelMaterials">4. المكونات الغالبة على النفايات (اختر ما ينطبق)</label>
+          <div class="chips-group" id="materialsChipsGroup" role="group" aria-labelledby="labelMaterials">
+            <button type="button" class="chip-btn selected" data-mat="plastic" aria-pressed="true">
               <span class="chip-check">✓</span> <span data-i18n="matPlastic">أكياس ومواد بلاستيكية</span>
             </button>
-            <button type="button" class="chip-btn" data-mat="rubble">
+            <button type="button" class="chip-btn" data-mat="rubble" aria-pressed="false">
               <span class="chip-check">✓</span> <span data-i18n="matRubble">ردام وركام أشغال بناء</span>
             </button>
-            <button type="button" class="chip-btn selected" data-mat="organic">
+            <button type="button" class="chip-btn selected" data-mat="organic" aria-pressed="true">
               <span class="chip-check">✓</span> <span data-i18n="matOrganic">نفايات منزلية عضوية</span>
             </button>
-            <button type="button" class="chip-btn" data-mat="tires">
+            <button type="button" class="chip-btn" data-mat="tires" aria-pressed="false">
               <span class="chip-check">✓</span> <span data-i18n="matTires">إطارات وعجلات مطاطية</span>
             </button>
-            <button type="button" class="chip-btn" data-mat="metal">
+            <button type="button" class="chip-btn" data-mat="metal" aria-pressed="false">
               <span class="chip-check">✓</span> <span data-i18n="matMetal">خردة ومعادن صلبة</span>
             </button>
-            <button type="button" class="chip-btn" data-mat="green">
+            <button type="button" class="chip-btn" data-mat="green" aria-pressed="false">
               <span class="chip-check">✓</span> <span data-i18n="matGreen">بقايا تقليم أشجار وأعشاب</span>
             </button>
           </div>
@@ -590,13 +590,13 @@
 
         <!-- SECTION 5: Vehicle Accessibility -->
         <div class="form-section">
-          <label class="section-label" data-i18n="labelAccess">5. مسلك وصول الشاحنات والآليات</label>
-          <div class="access-pill-group" id="accessPillGroup">
-            <div class="access-pill selected" data-access="paved">
+          <label class="section-label" id="labelAccess" data-i18n="labelAccess">5. مسلك وصول الشاحنات والآليات</label>
+          <div class="access-pill-group" id="accessPillGroup" role="radiogroup" aria-labelledby="labelAccess">
+            <div class="access-pill selected" data-access="paved" role="radio" tabindex="0" aria-checked="true">
               <svg class="icon" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
               <span data-i18n="accessPaved">مسلك معبد ومتاح للشاحنات</span>
             </div>
-            <div class="access-pill" data-access="narrow">
+            <div class="access-pill" data-access="narrow" role="radio" tabindex="0" aria-checked="false">
               <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
               <span data-i18n="accessNarrow">مسلك ضيق / تضاريس وعرة</span>
             </div>
@@ -610,7 +610,7 @@
           <input type="text" id="reportNotes" class="form-control" data-i18n-ph="phNotes" placeholder="أي توضيح يفيد فرق التدخل...">
         </div>
 
-        <button type="submit" class="btn btn-primary w-100" style="margin-top: 4px;">
+        <button type="submit" class="btn btn-primary w-100" id="btnSubmitReportForm" style="margin-top: 4px;">
           <span data-i18n="btnSubmitReport">اعتماد وتسجيل البلاغ فوراً</span>
         </button>
       </form>
@@ -622,17 +622,17 @@
     <div class="modal-card">
       <div class="modal-header">
         <h3 id="modalCampTitle" data-i18n="newCampaignTitle">برمجة مبادرة تطوعية ميدانية</h3>
-        <button class="modal-close-btn" aria-label="إغلاق">&times;</button>
+        <button class="modal-close-btn" aria-label="إغلاق النافذة">&times;</button>
       </div>
       <form id="newCampaignForm" class="modal-body">
         
         <div class="form-group">
-          <label data-i18n="labelCampTitle">عنوان المبادرة التطوعية *</label>
+          <label for="campInputTitle" data-i18n="labelCampTitle">عنوان المبادرة التطوعية *</label>
           <input type="text" id="campInputTitle" class="form-control" data-i18n-ph="phCampTitle" required>
         </div>
 
         <div class="form-group">
-          <label data-i18n="labelCampType">طبيعة النشاط التطوعي</label>
+          <label for="campInputType" data-i18n="labelCampType">طبيعة النشاط التطوعي</label>
           <select id="campInputType" class="form-control">
             <option value="clean" data-i18n="typeClean">رفع النفايات وتنظيف المحيط العمراني</option>
             <option value="tree" data-i18n="typeTree">تشجير وغرس أصناف نباتية ملائمة</option>
@@ -642,26 +642,26 @@
         </div>
 
         <div class="form-group">
-          <label data-i18n="labelCampDate">موعد وساعة الانطلاق *</label>
+          <label for="campInputDate" data-i18n="labelCampDate">موعد وساعة الانطلاق *</label>
           <input type="text" id="campInputDate" class="form-control" placeholder="مثال: الجمعة 28 أوت 2026 - 08:00 صباحاً" required>
         </div>
 
         <div class="form-group">
-          <label data-i18n="labelCampMeeting">مكان التجمع الميداني المحدد *</label>
+          <label for="campInputMeeting" data-i18n="labelCampMeeting">مكان التجمع الميداني المحدد *</label>
           <input type="text" id="campInputMeeting" class="form-control" data-i18n-ph="phCampMeeting" required>
         </div>
 
         <div class="form-group">
-          <label data-i18n="labelCampOrg">الجهة المبادرة أو الجمعية المنظمة</label>
+          <label for="campInputOrg" data-i18n="labelCampOrg">الجهة المبادرة أو الجمعية المنظمة</label>
           <input type="text" id="campInputOrg" class="form-control" data-i18n-ph="phCampOrg">
         </div>
 
         <div class="form-group">
-          <label data-i18n="labelCampTools">العتاد والمعدات المطلوبة (مفصولة بفواصل)</label>
+          <label for="campInputTools" data-i18n="labelCampTools">العتاد والمعدات المطلوبة (مفصولة بفواصل)</label>
           <input type="text" id="campInputTools" class="form-control" data-i18n-ph="phCampTools">
         </div>
 
-        <button type="submit" class="btn btn-accent w-100" style="margin-top: 6px;">
+        <button type="submit" class="btn btn-accent w-100" id="btnSubmitCampaignForm" style="margin-top: 6px;">
           <span data-i18n="btnSubmitCampaign">اعتماد ونشر المبادرة للعموم</span>
         </button>
       </form>
@@ -681,14 +681,15 @@
           </div>
           <h3 id="modalCoordTitle" data-i18n="coordModalTitle">بوابة المنسق الميداني الموحد - بلدية البيض</h3>
         </div>
-        <button class="modal-close-btn" aria-label="إغلاق">&times;</button>
+        <button class="modal-close-btn" aria-label="إغلاق النافذة">&times;</button>
       </div>
 
       <!-- SCREEN 1: PIN AUTHENTICATION -->
       <div id="coordPinScreen" class="modal-body" style="text-align: center; padding: 30px 20px;">
         <div style="max-width: 320px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px;">
-          <p style="font-size: 13.5px; color: var(--text-secondary);" data-i18n="coordPinPrompt">يرجى إدخال الرمز السري للمنسق للمتابعة:</p>
+          <label for="coordPinInput" style="font-size: 13.5px; color: var(--text-secondary);" data-i18n="coordPinPrompt">يرجى إدخال الرمز السري للمنسق للمتابعة:</label>
           <input type="password" id="coordPinInput" class="form-control text-center" maxlength="8" data-i18n-ph="coordPinPh" placeholder="الرمز السري للمنسق" style="letter-spacing: 4px; font-size: 18px; text-align: center;">
+          <div id="coordPinError" class="auth-error-msg" role="alert" aria-live="polite"></div>
           <button type="button" class="btn btn-primary w-100" id="btnCheckCoordPin">
             <span data-i18n="btnUnlockCoord">دخول لوحة التسيير</span>
           </button>
@@ -699,7 +700,7 @@
       <div id="coordDashboardScreen" class="modal-body" style="display: none;">
         
         <!-- Coordinator Nav Tabs -->
-        <div class="coord-nav-tabs">
+        <div class="coord-nav-tabs" role="tablist" aria-label="أقسام بوابة المنسق">
           <button type="button" class="coord-tab-btn active" data-coord-tab="triage" data-i18n="coordTabTriage">1. فرز البلاغات</button>
           <button type="button" class="coord-tab-btn" data-coord-tab="resolve" data-i18n="coordTabResolve">2. إغلاق البلاغ (بعد)</button>
           <button type="button" class="coord-tab-btn" data-coord-tab="report" data-i18n="coordTabReport">3. التقرير البلدي</button>
@@ -717,28 +718,28 @@
           <form id="coordResolveForm" style="display: flex; flex-direction: column; gap: 14px;">
             
             <div class="form-group">
-              <label data-i18n="labelSelectSpotToResolve">اختر النقطة السوداء المنجزة:</label>
+              <label for="resolveSpotSelect" data-i18n="labelSelectSpotToResolve">اختر النقطة السوداء المنجزة:</label>
               <select id="resolveSpotSelect" class="form-control" required>
                 <!-- Populated dynamically -->
               </select>
             </div>
 
             <div class="form-group">
-              <label data-i18n="labelAfterPhoto">صورة الموقع بعد انتهاء التنظيف (صورة واحدة):</label>
-              <div class="photo-uploader-box-compact" id="coordAfterPhotoBox">
+              <label id="labelAfterPhoto" data-i18n="labelAfterPhoto">صورة الموقع بعد انتهاء التنظيف (صورة واحدة):</label>
+              <div class="photo-uploader-box-compact" id="coordAfterPhotoBox" role="button" tabindex="0" aria-label="تحميل صورة الوضع بعد التنظيف">
                 <input type="file" id="coordAfterPhotoInput" accept="image/*" style="display: none;">
                 <svg class="icon" viewBox="0 0 24 24" style="width: 22px; height: 22px; color: var(--color-pine-700);"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                 <span style="font-size: 12.5px; font-weight: 500;" id="coordAfterPhotoPrompt">انقر لاختيار صورة الوضع بعد التنظيف</span>
-                <img id="coordAfterPhotoPreview" alt="After Preview" style="display: none; max-height: 120px; width: auto; margin: 0 auto;">
+                <img id="coordAfterPhotoPreview" alt="معاينة الصورة بعد التنظيف" style="display: none; max-height: 120px; width: auto; margin: 0 auto;">
               </div>
             </div>
 
             <div class="form-group">
-              <label data-i18n="labelCleanedByOrg">الجهة التي أنجزت التدخل الميداني:</label>
+              <label for="resolveCleanedBy" data-i18n="labelCleanedByOrg">الجهة التي أنجزت التدخل الميداني:</label>
               <input type="text" id="resolveCleanedBy" class="form-control" data-i18n-ph="phCleanedByOrg" placeholder="مثال: عمال مصلحة النظافة لبلدية البيض + فوج الفلاح للكشافة" required>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">
+            <button type="submit" class="btn btn-primary w-100" id="btnSubmitResolveForm">
               <span data-i18n="btnSubmitResolution">اعتماد وتوثيق الفضاء في سجل الإنجازات</span>
             </button>
           </form>
@@ -747,7 +748,7 @@
         <!-- TAB 3: MUNICIPAL BRIEF GENERATOR -->
         <div id="coordPane-report" class="coord-pane">
           <div style="display: flex; flex-direction: column; gap: 10px;">
-            <label class="section-label" data-i18n="coordReportTitle">التقرير الميداني الدوري الجاهز للإرسال (WhatsApp / SMS):</label>
+            <label for="municipalReportTextArea" class="section-label" data-i18n="coordReportTitle">التقرير الميداني الدوري الجاهز للإرسال (WhatsApp / SMS):</label>
             <textarea id="municipalReportTextArea" class="form-control" rows="10" readonly style="font-family: monospace; font-size: 12.5px; background: var(--bg-canvas); line-height: 1.5; resize: none;"></textarea>
             <button type="button" class="btn btn-accent w-100" id="btnCopyMunicipalReport">
               <svg class="icon" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
