@@ -4,11 +4,12 @@
 
 ---
 
-## 📌 ملخص الحالة الراهنة (Current Milestone: v1.4.1 Clean Slate Live Production Ready)
+## 📌 ملخص الحالة الراهنة (Current Milestone: v1.5.0 Production Vercel & Official Pitch Ready)
 * **المستودع الرئيسي على GitHub:** [https://github.com/Salahalioui/bayedha](https://github.com/Salahalioui/bayedha)
 * **الفرع:** `main`
 * **مشروع Supabase السحابي:** `https://wqtwsqyhzplrmmnvoxql.supabase.co` (PostgreSQL 17 + PostGIS + Realtime)
-* **الحالة:** تصفير وتطهير شامل لكافة البيانات الوهمية (Mock Data)، وتصفير الإحصائيات لتبدأ من 0 بشكل ديناميكي حقيقي، وإزالة تلميح كلمة السر الافتراضية، مع واجهات حالات الفراغ (Empty States) الأنيقة.
+* **استضافة Vercel:** مهيأة بملف `vercel.json` وأعلى معايير الأمان وPWA.
+* **الملف التقني والتنفيذي للتبني الرسمي:** منجز باللغة العربية الإدارية الراقية (`docs/dossier_officiel_elbayadh.html` و `docs/dossier_officiel_elbayadh.docx`).
 
 ---
 
@@ -34,6 +35,16 @@
 ---
 
 ## 📝 سجل التعديلات التفصيلي (Changelog)
+
+### الإصدار v1.5.0 (17 أوت 2026) - الجاهزية للإنتاج، استضافة Vercel، والملف الرسمي للتبني:
+* **تهيئة استضافة Vercel مع الأمان المتقدم:**
+  - إنشاء `vercel.json` لضبط رؤوس الحماية (CSP, X-Frame-Options, Permissions-Policy) وضبط سياسة التخزين المؤقت لـ PWA (`sw.js`).
+* **محرك الحفاظ على نشاط قاعدة البيانات (Supabase Free Tier Keep-Alive):**
+  - إنشاء دالة خادمة `api/keep-alive.js` مجدولة عبر Vercel Cron كل 3 أيام لمنع تجميد قاعدة البيانات المجانية نهائياً.
+* **إعداد الملف التقني والتنفيذي الرسمي لعرض الفكرة للتبني:**
+  - صياغة ملف استراتيجي ومقترح رسمي بالعربية الفصحى الإدارية الراقية موجه لوالي ولاية البيض ومدراء البيئة، الغابات، الشؤون الدينية، والحماية المدنية (`docs/dossier_officiel_elbayadh.html` و `docs/dossier_officiel_elbayadh.docx`).
+
+---
 
 ### الإصدار v1.4.1 (16 أوت 2026) - التصفير الكامل وتجهيز بيئة الاختبار الميداني النظيفة:
 * **تطهير قاعدة بيانات Supabase السحابية:**
