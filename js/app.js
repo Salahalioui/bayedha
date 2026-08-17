@@ -24,6 +24,7 @@ class BayedhaApp {
     this.coordAfterPhotoData = null;
     this.activeNearbySpot = null;
     this.isCoordAuthenticated = false;
+    this.pendingActionAfterAuth = null;
     this.lastFocusedElement = null;
     this.activeModalId = null;
 
@@ -170,8 +171,8 @@ class BayedhaApp {
           <p style="font-size: 13px; color: var(--text-secondary); max-width: 460px; margin: 0 auto 16px auto;">
             ${this.store.lang === 'ar' ? 'كن أول من يطلق مبادرة "تويزة" لتنظيف حي أو تشجير فضاء في بلدية البيض.' : 'Soyez le premier à programmer une opération citoyenne de nettoyage ou de reboisement.'}
           </p>
-          <button class="btn btn-primary" onclick="window.app.openModal('newCampaignModal', this)">
-            + ${this.store.lang === 'ar' ? 'برمجة أول مبادرة تطوعية' : 'Programmer une initiative'}
+          <button class="btn btn-primary" onclick="window.app.triggerCreateCampaign(this)">
+            + ${this.store.lang === 'ar' ? 'برمجة أول مبادرة تطوعية (خاص بالمنسق)' : 'Programmer une initiative'}
           </button>
         </div>
       `;
@@ -512,25 +513,69 @@ class BayedhaApp {
     }, 150);
   }
 
+  triggerCreateCampaign(triggerElement) {
+    if (!this.isCoordAuthenticated) {
+      this.openModal('coordinatorModal', triggerElement);
+      const pinError = document.getElementById('coordPinError');
+      if (pinError) {
+        pinError.textContent = '';
+        pinError.classList.remove('active');
+      }
+      document.getElementById('coordPinScreen').style.display = 'block';
+      document.getElementById('coordDashboardScreen').style.display = 'none';
+      this.pendingActionAfterAuth = () => {
+        this.openModal('newCampaignModal');
+      };
+      this.showToast(this.store.lang === 'ar' ? 'برمجة المبادرات مخصصة للمنسق الميداني والجمعيات المعتمدة. يرجى إدخال الرمز السري للمتابعة.' : 'La programmation est réservée au coordinateur. Veuillez saisir le code PIN.');
+      setTimeout(() => {
+        const pinInput = document.getElementById('coordPinInput');
+        if (pinInput) pinInput.focus();
+      }, 60);
+    } else {
+      this.openModal('newCampaignModal', triggerElement);
+    }
+  }
+
   openCreateCampaignFromSpot(spotId) {
     const spot = this.store.spots.find(s => s.id === spotId);
     if (!spot) return;
 
-    this.openModal('newCampaignModal');
-    const titleField = document.getElementById('campInputTitle');
-    const meetingField = document.getElementById('campInputMeeting');
-    
-    if (titleField) {
-      titleField.value = `مبادرة تنظيف وتأهيل: ${this.store.getI18nText(spot.title)}`;
-    }
-    if (meetingField) {
-      meetingField.value = this.store.getI18nText(spot.neighbourhood);
-    }
-    
-    const campForm = document.getElementById('newCampaignForm');
-    if (campForm) {
-      campForm.dataset.lat = spot.lat;
-      campForm.dataset.lng = spot.lng;
+    const populateForm = () => {
+      this.openModal('newCampaignModal');
+      const titleField = document.getElementById('campInputTitle');
+      const meetingField = document.getElementById('campInputMeeting');
+      
+      if (titleField) {
+        titleField.value = `مبادرة تنظيف وتأهيل: ${this.store.getI18nText(spot.title)}`;
+      }
+      if (meetingField) {
+        meetingField.value = this.store.getI18nText(spot.neighbourhood);
+      }
+      
+      const campForm = document.getElementById('newCampaignForm');
+      if (campForm) {
+        campForm.dataset.lat = spot.lat;
+        campForm.dataset.lng = spot.lng;
+      }
+    };
+
+    if (!this.isCoordAuthenticated) {
+      this.openModal('coordinatorModal');
+      const pinError = document.getElementById('coordPinError');
+      if (pinError) {
+        pinError.textContent = '';
+        pinError.classList.remove('active');
+      }
+      document.getElementById('coordPinScreen').style.display = 'block';
+      document.getElementById('coordDashboardScreen').style.display = 'none';
+      this.pendingActionAfterAuth = populateForm;
+      this.showToast(this.store.lang === 'ar' ? 'برمجة المبادرات مخصصة للمنسق الميداني والجمعيات المعتمدة. يرجى إدخال الرمز السري للمتابعة.' : 'La programmation est réservée au coordinateur. Veuillez saisir le code PIN.');
+      setTimeout(() => {
+        const pinInput = document.getElementById('coordPinInput');
+        if (pinInput) pinInput.focus();
+      }, 60);
+    } else {
+      populateForm();
     }
   }
 
@@ -640,6 +685,16 @@ class BayedhaApp {
           pinError.textContent = '';
           pinError.classList.remove('active');
         }
+
+        if (typeof this.pendingActionAfterAuth === 'function') {
+          const action = this.pendingActionAfterAuth;
+          this.pendingActionAfterAuth = null;
+          this.closeModal('coordinatorModal');
+          action();
+          this.showToast(this.store.lang === 'ar' ? 'تم التحقق بنجاح. يمكنك الآن برمجة المبادرة التطوعية.' : 'Authentification réussie. Vous pouvez programmer l\'initiative.');
+          return;
+        }
+
         document.getElementById('coordPinScreen').style.display = 'none';
         document.getElementById('coordDashboardScreen').style.display = 'block';
         this.renderCoordinatorDashboard();
@@ -1118,11 +1173,11 @@ class BayedhaApp {
       });
     });
 
-    // Open New Campaign Modal
+    // Open New Campaign Modal (Restricted to Coordinator / Authorized Associations)
     const newCampBtn = document.getElementById('btnOpenNewCampaign');
     if (newCampBtn) {
       newCampBtn.addEventListener('click', (e) => {
-        this.openModal('newCampaignModal', e.currentTarget);
+        this.triggerCreateCampaign(e.currentTarget);
       });
     }
 
