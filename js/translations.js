@@ -29,6 +29,7 @@ const i18n = {
     coordTabTriage: '1. فرز ومراجعة البلاغات',
     coordTabResolve: '2. إغلاق البلاغ وتوثيق (بعد)',
     coordTabReport: '3. التقرير البلدي الموجز',
+    coordTabNewCamp: '4. برمجة مبادرة جديدة',
     
     // Coordinator Actions
     coordNoSpots: 'لا توجد بلاغات نشطة بانتظار المعالجة حالياً.',
@@ -154,7 +155,7 @@ const i18n = {
     // Campaign Card & Hub
     campaignsTitle: 'المبادرات التطوعية وحملات "التويزة" المبرمجة',
     campaignsSubtitle: 'تنظيم وتوحيد الجهود الميدانية لجمعيات المجتمع المدني والمواطنين بالتنسيق مع المصالح العمومية',
-    btnNewCampaign: 'إدراج مبادرة تطوعية جديدة',
+    btnNewCampaign: 'برمجة مبادرة تطوعية (خاص بالمنسق)',
     btnJoinCampaign: 'تأكيد المشاركة في المبادرة',
     btnJoined: 'تم تسجيل مشاركتكم بنجاح',
     campaignDate: 'تاريخ وتوقيت الانطلاق',
@@ -251,6 +252,7 @@ const i18n = {
     coordTabTriage: '1. Modération & Tri',
     coordTabResolve: '2. Clôturer & Documenter',
     coordTabReport: '3. Synthèse Communale',
+    coordTabNewCamp: '4. Programmer Action',
     
     // Coordinator Actions
     coordNoSpots: 'Aucun signalement en attente pour le moment.',
@@ -376,7 +378,7 @@ const i18n = {
     // Campaign Card & Hub
     campaignsTitle: 'Opérations de Volontariat et "Touiza" Programmées',
     campaignsSubtitle: 'Mobilisation coordonnée des forces vives associatives et citoyennes en synergie avec les services publics',
-    btnNewCampaign: 'Programmer une nouvelle opération',
+    btnNewCampaign: 'Programmer une initiative (Coordinateur)',
     btnJoinCampaign: 'Confirmer mon engagement',
     btnJoined: 'Participation confirmée',
     campaignDate: 'Date et horaires d\'intervention',
