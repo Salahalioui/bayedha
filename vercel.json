@@ -3,6 +3,12 @@
   "name": "bayedha",
   "cleanUrls": true,
   "trailingSlash": false,
+  "crons": [
+    {
+      "path": "/api/keep-alive",
+      "schedule": "0 8 */3 * *"
+    }
+  ],
   "headers": [
     {
       "source": "/sw.js",
