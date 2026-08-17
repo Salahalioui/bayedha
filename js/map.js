@@ -108,6 +108,19 @@ class BayedhaMap {
     });
   }
 
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+if (!window.escapeHTML) {
+  window.escapeHTML = escapeHTML;
+}
+
   renderSpots(spots, store) {
     if (!this.map || !this.markersLayer) return;
 
@@ -118,10 +131,12 @@ class BayedhaMap {
       const icon = this.createCustomIcon(spot.status, spot.category);
       const marker = L.marker([spot.lat, spot.lng], { icon: icon });
 
-      const title = store.getI18nText(spot.title);
-      const neighbourhood = store.getI18nText(spot.neighbourhood);
-      const description = store.getI18nText(spot.description);
-      const upvotes = spot.upvotes || 1;
+      const title = escapeHTML(store.getI18nText(spot.title));
+      const neighbourhood = escapeHTML(store.getI18nText(spot.neighbourhood));
+      const description = escapeHTML(store.getI18nText(spot.description));
+      const safeId = escapeHTML(spot.id);
+      const safeCampaignId = escapeHTML(spot.campaignId || '');
+      const upvotes = Number(spot.upvotes) || 1;
 
       let statusBadge = '';
       let actionBtn = '';
@@ -133,10 +148,10 @@ class BayedhaMap {
 
         actionBtn = `
           <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
-            <button class="btn btn-sm ${upvoteBtnClass} w-100" onclick="window.app.upvoteSpot('${spot.id}')">
+            <button class="btn btn-sm ${upvoteBtnClass} w-100" onclick="window.app.upvoteSpot('${safeId}')">
               ${upvoteBtnText}
             </button>
-            <button class="btn btn-sm btn-primary w-100" onclick="window.app.openCreateCampaignFromSpot('${spot.id}')">
+            <button class="btn btn-sm btn-primary w-100" onclick="window.app.openCreateCampaignFromSpot('${safeId}')">
               ${store.lang === 'ar' ? 'برمجة حملة تطوعية لهذا الموقع' : 'Programmer une action ici'}
             </button>
           </div>
@@ -144,22 +159,24 @@ class BayedhaMap {
       } else if (spot.status === 'campaign') {
         statusBadge = `<span class="badge badge-warning">${t.legendCampaign}</span>`;
         actionBtn = `
-          <button class="btn btn-sm btn-accent w-100 mt-2" onclick="window.app.navigateToCampaign('${spot.campaignId}')">
+          <button class="btn btn-sm btn-accent w-100 mt-2" onclick="window.app.navigateToCampaign('${safeCampaignId}')">
             ${t.btnJoinCampaign}
           </button>
         `;
       } else if (spot.status === 'resolved') {
         statusBadge = `<span class="badge badge-success">${t.badgeResolved}</span>`;
         actionBtn = `
-          <button class="btn btn-sm btn-outline w-100 mt-2" onclick="window.app.showBeforeAfterModal('${spot.id}')">
+          <button class="btn btn-sm btn-outline w-100 mt-2" onclick="window.app.showBeforeAfterModal('${safeId}')">
             ${t.navImpact}
           </button>
         `;
       }
 
+      const safePhoto = spot.photo ? encodeURI(spot.photo).replace(/"/g, '&quot;') : '';
+
       const popupHtml = `
         <div class="spot-popup-card">
-          ${spot.photo ? `<div class="popup-image" style="background-image: url('${spot.photo}')"></div>` : ''}
+          ${safePhoto ? `<div class="popup-image" style="background-image: url('${safePhoto}')"></div>` : ''}
           <div class="popup-content">
             <div class="popup-header">
               ${statusBadge}
