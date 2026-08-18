@@ -8,6 +8,17 @@
 [![Status](https://img.shields.io/badge/Status-Interactive_MVP-success.svg)]()
 [![Free Tier](https://img.shields.io/badge/Stack-100%25_Zero_Cost-brightgreen.svg)]()
 [![Location](https://img.shields.io/badge/Pilot_City-El_Bayadh_Algeria-orange.svg)]()
+[![Live Demo](https://img.shields.io/badge/Live_App-bayedha.vercel.app-blue.svg)](https://bayedha.vercel.app/)
+
+---
+
+## 🎬 العرض التقديمي الشامل للمنصة (Video Presentation)
+
+<div align="center">
+  <video src="presentation/out.mp4" width="100%" controls="controls" poster="presentation/snapshots/frame-00-at-3.5s.png">
+    <a href="presentation/out.mp4">▶️ اضغط هنا لمشاهدة الفيديو التعريفي للمشروع / Watch Presentation Video</a>
+  </video>
+</div>
 
 ---
 
