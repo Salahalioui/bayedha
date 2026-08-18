@@ -14,9 +14,15 @@
 
 ## 🎬 العرض التقديمي الشامل للمنصة (Video Presentation)
 
+<p align="center">
+  <a href="https://raw.githubusercontent.com/Salahalioui/bayedha/main/presentation/out.mp4" target="_blank" rel="noopener noreferrer">
+    <img src="https://raw.githubusercontent.com/Salahalioui/bayedha/main/assets/img/video_banner.svg" alt="تشغيل العرض التقديمي لمنصة بيّضها" width="100%" />
+  </a>
+</p>
+
 <div align="center">
-  <video src="presentation/out.mp4" width="100%" controls="controls" poster="presentation/snapshots/frame-00-at-3.5s.png">
-    <a href="presentation/out.mp4">▶️ اضغط هنا لمشاهدة الفيديو التعريفي للمشروع / Watch Presentation Video</a>
+  <video src="presentation/out.mp4" width="100%" controls="controls" poster="assets/img/video_banner.svg">
+    <a href="presentation/out.mp4">▶️ اضغط هنا لمشاهدة وتحميل الفيديو التعريفي للمشروع (MP4)</a>
   </video>
 </div>
 
